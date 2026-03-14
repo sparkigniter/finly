@@ -70,7 +70,7 @@ async def analyze_portfolio(file: UploadFile = File(...)):
 
     try:
         stocks_json = await parse_zeroda_file(file)
-        batch_size = 3
+        batch_size = 30
         for i in range(0, len(stocks_json), batch_size):
             batch = stocks_json[i:i + batch_size]
             print(f"Processing batch: {batch}")
