@@ -1,9 +1,10 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, BackgroundTasks
 import pandas as pd
 import io
 import os
 from App.AI.GoogleVertex.Agents.FinAdvisory.Agent import FinAdvisorAgent
 import json
+from App.AI.GoogleVertex.Agents.Tools.FirestoreTools import get_latest_analysis
 from App.AI.GoogleVertex.Workflows.Orchestrator import FinAdvisorOrchestrator
 import os
 from dotenv import load_dotenv
@@ -66,7 +67,16 @@ async def parse_zeroda_file(file: UploadFile = File(...)):
 
 
 @app.post("/analyze-portfolio")
-async def analyze_portfolio(file: UploadFile = File(...)):
+async def analyze_portfolio(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+
+        background_tasks.add_task(process_protfolio, file)
+
+        return {
+            "status": "Analysis the data. Data will be reflected in your accout soon",
+        }
+    
+
+async def process_protfolio(file) : 
 
     try:
         stocks_json = await parse_zeroda_file(file)
@@ -88,7 +98,14 @@ async def analyze_portfolio(file: UploadFile = File(...)):
             "message": str(e)
         }
 
+@app.get("/portfolio/{user_id}")
+async def fetch_ui_data(user_id: str):
+    # This directly fetches the JSON string from SQL
+    data = get_latest_analysis(user_id)
+    json_data = json.loads(data)
+    return json_data
+
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_keep_alive=3600)
