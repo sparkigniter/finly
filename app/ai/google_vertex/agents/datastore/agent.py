@@ -1,7 +1,7 @@
 from google.adk import Agent
-from App.AI.GoogleVertex.Agents.Formatter.Schemas.Response import PortfolioBreakdown
+from app.ai.google_vertex.agents.formatter.schemas.response import PortfolioBreakdown
 from typing import Optional
-from App.AI.GoogleVertex.Agents.Tools.FirestoreTools import store_portfolio_analysis, get_latest_analysis
+from app.ai.google_vertex.agents.tools.firestore_datastore import store_portfolio_analysis, get_latest_analysis
 
 class DataStoreAgent:
     """

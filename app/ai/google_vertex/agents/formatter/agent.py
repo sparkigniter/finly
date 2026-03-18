@@ -1,12 +1,12 @@
 from google.adk import Agent
-from App.AI.GoogleVertex.Agents.Formatter.Schemas.Response import PortfolioBreakdown
+from app.ai.google_vertex.agents.formatter.schemas.response import PortfolioBreakdown
 from typing import Optional
 
-class FormatterAgent:
+class formatterAgent:
     """
     Agent responsible for data restructuring and validation.
     
-    The FormatterAgent takes unstructured research data and maps it to a strict 
+    The formatterAgent takes unstructured research data and maps it to a strict 
     Pydantic schema (PortfolioBreakdown), ensuring data integrity for the 
     application frontend and database.
     """
@@ -44,11 +44,11 @@ class FormatterAgent:
             model="gemini-2.5-flash",
             name="formatter_agent",
             output_key="formatted_data",
-            instruction=FormatterAgent.instruction,
+            instruction=formatterAgent.instruction,
             # Link the Pydantic model to force structured JSON output
             output_schema=PortfolioBreakdown
         )
-        FormatterAgent.__agent = agent
+        formatterAgent.__agent = agent
         return agent
 
     @staticmethod
@@ -60,9 +60,9 @@ class FormatterAgent:
         Returns:
             Agent: The singleton agent instance.
         """
-        if FormatterAgent.__agent is None:
-            FormatterAgent.__create_agent()
-        return FormatterAgent.__agent
+        if formatterAgent.__agent is None:
+            formatterAgent.__create_agent()
+        return formatterAgent.__agent
 
     @staticmethod
     def get_new_agent() -> Agent:
@@ -73,4 +73,4 @@ class FormatterAgent:
         Returns:
             Agent: A fresh Agent instance.
         """
-        return FormatterAgent.__create_agent()
+        return formatterAgent.__create_agent()
