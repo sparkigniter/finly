@@ -1,1 +1,1 @@
-from .file_service_provider import FileServiceProvider
+from .file_service import FileService

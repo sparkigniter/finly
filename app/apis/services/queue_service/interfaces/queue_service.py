@@ -2,5 +2,5 @@ from typing import Protocol
 
 class QueueService :
 
-    def push(self, data: dict) -> None:
+    def push(self, queue:str, data: dict) -> None:
         pass

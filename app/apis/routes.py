@@ -2,11 +2,10 @@ from datetime import timezone, datetime
 from fastapi import FastAPI, UploadFile, File
 from dotenv import load_dotenv
 import json
-from app.apis.services.file_service.service import FileService
+from app.apis.services.file_service.file_service_provider import FileServiceProvider
 from app.apis.services.file_service.zeroda import ZerodhaFileService
 from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import FinAdvisorOrchestrator
-from app.apis.services.queue_service.queue_service_provider import QueueServiceProvider
 from app.apis.services.container import container
 
 
@@ -16,23 +15,23 @@ app = FastAPI()
 
 @app.post("/analyze-portfolio")
 async def analyze_portfolio(file: UploadFile = File(...)):
-    """ API to analzs the protfolio data"""
-    protfolio_data: dict = FileService().parse_file(ZerodhaFileService(file))
+    """ API to analyze the portfolio data"""
+    portfolio_data: dict = await container.file_service.parse_file(file= file)
     queue_data: dict = {
-        "data": protfolio_data,
-        "pushed_at": datetime.now(timezone.utc)
+        "data": portfolio_data,
+        "pushed_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     }
-    QueueServiceProvider(container.queue_service).push(queue_data)
+    container.protfolio_analysis_queue.push(queue_data)
     return {
         "status": "success",
         "message": "We are analysing the stocks. You will get email notification once succeeded."
     }
 
 
-async def process_protfolio(file): 
-    """ process the protfolio data """
+async def process_portfolio(file): 
+    """ process the portfolio data """
     try:  
-        stocks = FileService().parse_file(container.file_service)
+        stocks = await container.file_service.parse_file(file= file)
         batch_size = 30
         for i in range(0, len(stocks), batch_size):
             batch = stocks[i:i + batch_size]

@@ -42,7 +42,7 @@ class FinAdvisorAgent:
         
         Configures the agent with:
         - Model: Gemini 2.5 Flash (for high-speed financial processing)
-        - Tools: Google Search (for market grounding)
+        - tools: Google Search (for market grounding)
         - Output Key: 'formatted_data' (for state persistence)
         
         Returns:
@@ -98,24 +98,31 @@ class FinAdvisorAgent:
         """
         FinAdvisorAgent.instruction += " " + additional_instruction
     
+    @staticmethod
     def set_temperature(temperature: int) -> None:
         FinAdvisorAgent.__temperature = temperature
 
+    @staticmethod
     def get_temperature() -> int: 
         return FinAdvisorAgent.__temperature
     
+    @staticmethod
     def set_max_output_tokens(max_output_tokens: int) -> None:
         FinAdvisorAgent.__max_output_tokens = max_output_tokens
 
+    @staticmethod
     def get_max_output_tokens() -> int:
         return FinAdvisorAgent.__max_output_tokens
 
+    @staticmethod
     def set_top_p(top_p: int) -> None:
         FinAdvisorAgent.__top_p = top_p
 
+    @staticmethod
     def get_top_p() -> int:
         return FinAdvisorAgent.__top_p
     
+    @staticmethod
     def get_content_config() -> types.GenerateContentConfig:
         return types.GenerateContentConfig(
             temperature= FinAdvisorAgent.get_temperature(),

@@ -6,6 +6,8 @@ class QueueServiceProvider :
 
     def __init__(self, client: QueueService):
         self.__client = client
+    
 
-    def push(self, data):
-        self.__client.push(data)
+    def push(self, queue: str, data: dict):
+        self.__client.push(queue= queue, data= data)
+    
