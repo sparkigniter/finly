@@ -1,10 +1,11 @@
-from App.AI.GoogleVertex.Agents.FinAdvisory.Agent import FinAdvisorAgent
-from App.AI.GoogleVertex.Agents.Formatter.Agent import FormatterAgent
-from App.AI.GoogleVertex.Agents.DataSore.Agent import DataStoreAgent
 from google.adk.agents import SequentialAgent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
+
+from app.ai.google_vertex.agents.finadvisory.agent import FinAdvisorAgent
+from app.ai.google_vertex.agents.formatter.agent import FormatterAgent
+from app.ai.google_vertex.agents.datastore.agent import DataStoreAgent
 
 class FinAdvisorOrchestrator:
     """
