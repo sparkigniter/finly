@@ -44,14 +44,30 @@ No more juggling between browser tabs, news sites, and your broker dashboard —
 git clone https://github.com/sparkigniter/finly.git
 cd finly
 
-# 2. Install dependencies
+# 2. Install Python dependencies
 pip install -r requirements.txt
 
-# 3. Run the app
-python app/main.py
+# 3. Install frontend dependencies
+cd app/frontend && npm install
 ```
 
-Then open your browser at `http://localhost:5000`.
+### Running the app
+
+You'll need **two terminals** — one for the backend, one for the frontend.
+
+**Terminal 1 — Backend (API server)**
+```bash
+# From the project root
+python3 -m app.backend.apis
+```
+
+**Terminal 2 — Frontend (Dev server)**
+```bash
+cd app/frontend
+npm run dev
+```
+
+Then open your browser at the URL shown by the frontend dev server (usually `http://localhost:5173`).
 
 ### Exporting your Zerodha holdings
 
