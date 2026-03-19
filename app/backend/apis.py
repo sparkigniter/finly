@@ -2,16 +2,32 @@ from datetime import timezone, datetime
 from fastapi import FastAPI, UploadFile, File
 from dotenv import load_dotenv
 import json
-from app.apis.services.file_service.file_service_provider import FileServiceProvider
-from app.apis.services.file_service.zeroda import ZerodhaFileService
+from app.backend.services.file_service.file_service_provider import FileServiceProvider
+from app.backend.services.file_service.zeroda import ZerodhaFileService
 from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import FinAdvisorOrchestrator
-from app.apis.services.container import container
+from app.backend.services.container import container
+from fastapi.middleware.cors import CORSMiddleware
 
 
 load_dotenv()  
 
 app = FastAPI()
+
+# 1. Define the origins that are allowed to talk to your server
+origins = [
+    "http://localhost:5173",  # Vite default port
+    "http://127.0.0.1:5173",  # Alternative local address
+]
+
+# 2. Add the middleware to the FastAPI app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,           # Allow your React app
+    allow_credentials=True,
+    allow_methods=["*"],             # Allow GET, POST, etc.
+    allow_headers=["*"],             # Allow all headers
+)
 
 @app.post("/analyze-portfolio")
 async def analyze_portfolio(file: UploadFile = File(...)):
