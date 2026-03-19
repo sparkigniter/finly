@@ -26,7 +26,7 @@ export const StatsHero = ({ summary }) => {
         </div>
       </div>
 
-      <div className="bg-slate-900 p-6 rounded-2xl shadow-lg text-white">
+      <div className="bg-white p-6 rounded-2xl shadow-lg text-white">
         <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Diversification</p>
         <h2 className="text-3xl font-black mt-1">{summary.diversification_score}/10</h2>
         <div className="w-full bg-slate-700 h-1.5 rounded-full mt-3 overflow-hidden">
