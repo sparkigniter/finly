@@ -3,7 +3,8 @@ from .file_service.interfaces.file_service import FileService
 from .queue_service.interfaces.queue_service import QueueService
 from .queue_service.google_pubsub.pubsub import PubSub
 from .queue_service.queue_service_provider import QueueServiceProvider
-from app.apis.queues.protfolio_analyse import ProtfolioAnalyseQueue
+from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
+
 class Container:
 
     def __init__(self):
