@@ -1,1 +1,1 @@
-from .agent import formatterAgent
+from .agent import FormatterAgent
