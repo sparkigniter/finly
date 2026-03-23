@@ -20,8 +20,8 @@ export const StockCard = ({ stock }) => {
             {stock.ticker[0]}
           </div>
           <div>
-            <h3 className="font-bold text-slate-900 text-lg">{stock.ticker}</h3>
-            <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">{stock.sector}</p>
+            <h3 className="font-bold text-slate-900 text-lg text-left">{stock.ticker}</h3>
+            <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest text-left">{stock.sector}</p>
           </div>
         </div>
 
@@ -43,12 +43,12 @@ export const StockCard = ({ stock }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <h4 className="text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest">Technical Outlook</h4>
-              <p className="text-sm text-slate-600 leading-relaxed italic">"{stock.technical_view}"</p>
+              <p className="text-sm text-slate-600 leading-relaxed italic">{stock.technical_view}</p>
             </div>
             
             <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <h4 className="text-[10px] font-black text-slate-400 uppercase mb-3 tracking-widest">Fundamental Summary</h4>
-              <p className="text-sm text-slate-600 leading-relaxed">"{stock.fundamental_summary}"</p>
+              <p className="text-sm text-slate-600 leading-relaxed">{stock.fundamental_summary}</p>
             </div>
           </div>
 

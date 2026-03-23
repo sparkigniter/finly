@@ -44,11 +44,11 @@ class formatterAgent:
             model="gemini-2.5-flash",
             name="formatter_agent",
             output_key="formatted_data",
-            instruction=formatterAgent.instruction,
+            instruction=FormatterAgent.instruction,
             # Link the Pydantic model to force structured JSON output
             output_schema=PortfolioBreakdown
         )
-        formatterAgent.__agent = agent
+        FormatterAgent.__agent = agent
         return agent
 
     @staticmethod
@@ -60,9 +60,9 @@ class formatterAgent:
         Returns:
             Agent: The singleton agent instance.
         """
-        if formatterAgent.__agent is None:
-            formatterAgent.__create_agent()
-        return formatterAgent.__agent
+        if FormatterAgent.__agent is None:
+            FormatterAgent.__create_agent()
+        return FormatterAgent.__agent
 
     @staticmethod
     def get_new_agent() -> Agent:
@@ -73,4 +73,4 @@ class formatterAgent:
         Returns:
             Agent: A fresh Agent instance.
         """
-        return formatterAgent.__create_agent()
+        return FormatterAgent.__create_agent()

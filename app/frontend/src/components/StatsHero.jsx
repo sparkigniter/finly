@@ -28,11 +28,11 @@ export const StatsHero = ({ summary }) => {
 
       <div className="bg-white p-6 rounded-2xl shadow-lg text-white">
         <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Diversification</p>
-        <h2 className="text-3xl font-black mt-1">{summary.diversification_score}/10</h2>
+        <h2 className="text-3xl font-black mt-1">{summary.diversification_score}/100</h2>
         <div className="w-full bg-slate-700 h-1.5 rounded-full mt-3 overflow-hidden">
           <div 
             className="bg-blue-400 h-full transition-all duration-500" 
-            style={{ width: `${(summary.diversification_score || 0) * 10}%` }}
+            style={{ width: `${(summary.diversification_score  || 0)}%` }}
           />
         </div>
       </div>

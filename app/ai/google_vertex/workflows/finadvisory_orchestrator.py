@@ -4,7 +4,7 @@ from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
 from app.ai.google_vertex.agents.finadvisory.agent import FinAdvisorAgent
-from app.ai.google_vertex.agents.formatter.agent import formatterAgent
+from app.ai.google_vertex.agents.formatter.agent import FormatterAgent
 from app.ai.google_vertex.agents.datastore.agent import DataStoreAgent
 
 class FinAdvisorOrchestrator:
@@ -21,7 +21,7 @@ class FinAdvisorOrchestrator:
         Returns:
             SequentialAgent: The orchestrator's root agent containing sub-agents.
         """
-        print("[FinAdvisorOrchestrator] Creating new pipeline with FinAdvisorAgent and formatterAgent")
+        print("[FinAdvisorOrchestrator] Creating new pipeline with FinAdvisorAgent and FormatterAgent")
 
         FinAdvisorAgent.set_temperature(0.1)
         FinAdvisorAgent.set_max_output_tokens(100000)
@@ -31,7 +31,7 @@ class FinAdvisorOrchestrator:
             name="PortfolioPipeline",
             sub_agents=[
                 FinAdvisorAgent.get_new_agent(),
-                formatterAgent.get_new_agent(),
+                FormatterAgent.get_new_agent(),
                 DataStoreAgent.get_new_agent()
             ]
         )
