@@ -70,7 +70,8 @@ class FinAdvisorOrchestrator:
         print("[analyze_portfolio] Creating session")
         session = await session_service.create_session(
             app_name="FinApp",
-            user_id=user_id
+            user_id=user_id,
+            state= {"user_id": user_id}
         )
 
         # Prepare the user message

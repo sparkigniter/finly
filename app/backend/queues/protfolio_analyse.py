@@ -24,7 +24,7 @@ class ProtfolioAnalyseQueue:
                 # Acknowledge the message so it's not redelivered
                 data = json.loads(msg.message.data)
                 print(f"Data: {data}")
-                await self.__orchestrator__.analyze_portfolio(user_id= 'test', file_content= data["data"])
+                await self.__orchestrator__.analyze_portfolio(user_id= data["user_id"], file_content= data["data"])
                 self.__queue_service_provider__.aknowledge(message_id= msg.ack_id, queue= self.JOB_NAME)
         except exceptions.DeadlineExceeded:
             return None

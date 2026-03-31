@@ -10,11 +10,10 @@ db = firestore.Client(database="finly")
 def store_portfolio_analysis(analysis_data: str, context: ToolContext) -> str:
     """Stores the stock analysis results into Firestore under the user's history."""
 
-    user_id = "testid"
+    user_id = context.state.get("user_id", "default_user")
     print(f"[INFO] Storing portfolio analysis for user_id: {user_id}")
     # Reference a collection named 'portfolio_history'
     doc_ref = db.collection("portfolio_history").document()
-    #user_id = context.state.get("user_id", "default_user")
     
     data = {
         "user_id": user_id,
@@ -31,7 +30,7 @@ def get_latest_analysis(user_id: str) -> dict:
     print(f"[INFO] Fetching latest portfolio analysis for user_id: {user_id}")
     query = (
         db.collection("portfolio_history")
-        # .where("user_id", "==", user_id)
+        .where("user_id", "==", user_id)
         .order_by("created_at", direction=firestore.Query.DESCENDING)
         .limit(1)
     )

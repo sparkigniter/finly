@@ -38,11 +38,18 @@ app.add_middleware(
 async def analyze_portfolio(file: UploadFile = File(...), token: Token = Depends(verify_token)):
     """ API to analyze the portfolio data"""
 
+    user_id = token.get_claim("user_id")
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+
     portfolio_data: dict = await Container.get().get_file_service.parse_file(file)
     
     queue_data: dict = {
         "data": portfolio_data,
-        "pushed_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+        "pushed_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "user_id": user_id,
+        "status": "pending"
     }
     Container.get().get_portfolio_analysis_queue.push(queue_data)
     return {
@@ -50,19 +57,14 @@ async def analyze_portfolio(file: UploadFile = File(...), token: Token = Depends
         "message": "We are analysing the stocks. You will get email notification once succeeded."
     }
 
-# @app.get("/portfolio/{user_id}")
-# async def fetch_ui_data(user_id: str , token: Token = Depends(verify_token)):
-#     # This directly fetches the JSON string from SQL
-#     data = get_latest_analysis(user_id)
-#     json_data = json.loads(data)
-#     return json_data
-
-@app.get("/portfolio/{user_id}")
-async def fetch_ui_data(user_id: str):
+@app.get("/portfolio")
+async def fetch_ui_data(token: Token = Depends(verify_token)):
     # This directly fetches the JSON string from SQL
+    user_id = token.get_claim("user_id")
+    if user_id is None:
+        raise HTTPException(status_code=401, detail="Unauthorized")
     data = get_latest_analysis(user_id)
-    json_data = json.loads(data)
-    return json_data
+    return data
 
 @app.post("/user")
 async def register_user(user: UserCreateDto):
