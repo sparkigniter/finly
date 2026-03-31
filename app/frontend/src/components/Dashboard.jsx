@@ -6,6 +6,7 @@ import { FileUpload } from './FileUpload';
 import {StockFilters} from './StockFilters';
 import logo from '../assets/logo.png';
 import '../App.css';
+import { useAuth } from '../context/AuthContext';
 
 export const Dashboard = () => {
     const [data, setData] = useState(null);
@@ -14,11 +15,18 @@ export const Dashboard = () => {
     const [filterType, setFilterType] = useState("All");
     const [sectorType, setSectorType] = useState("All");
 
-    const API_URL = "http://localhost:8000/portfolio/1";
+    const API_URL = "http://localhost:8000/portfolio";
+    const {token} = useAuth();
 
     const refreshData = useCallback(async () => {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(API_URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
             if (!response.ok) throw new Error("Failed to fetch");
             const result = await response.json();
             setData(result);

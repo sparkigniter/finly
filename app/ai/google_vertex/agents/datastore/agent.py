@@ -42,7 +42,7 @@ class DataStoreAgent:
             output_key="formatted_data",
             instruction=self.config.instruction,
             generate_content_config=self.config.get_content_config(),
-            output_schema=PortfolioBreakdown,   
+            output_schema=PortfolioBreakdown,
             tools= [store_portfolio_analysis]
         )
         DataStoreAgent._agent = agent

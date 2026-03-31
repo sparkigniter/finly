@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export const FileUpload = ({ onUploadSuccess }) => {
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState('');
+  const {token} = useAuth();
+
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -18,6 +21,9 @@ export const FileUpload = ({ onUploadSuccess }) => {
       const response = await fetch('http://localhost:8000/analyze-portfolio', {
         method: 'POST',
         body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
