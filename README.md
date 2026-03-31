@@ -37,7 +37,7 @@ No more juggling between browser tabs, news sites, and your broker dashboard —
 - Python 3.10 or higher
 - A Zerodha account (to export your holdings as CSV)
 
-### Installation
+### Manual Installation
 
 ```bash
 # 1. Clone the repository
@@ -68,6 +68,17 @@ npm run dev
 ```
 
 Then open your browser at the URL shown by the frontend dev server (usually `http://localhost:5173`).
+
+### 🚀 One-Step Installation and runing the app
+
+If you are on Linux or macOS, you can bootstrap the entire environment (Python, Node, VirtualEnvs, and Dependencies) with a single command:
+
+Bash
+```git clone https://github.com/sparkigniter/finly.git && cd finly && chmod +x setup.sh && ./setup.sh```
+Note for Windows Users: It is highly recommended to run the command above inside WSL2 (Ubuntu) for a native Linux experience.
+<img width="1214" height="955" alt="Screenshot 2026-03-31 at 8 32 33 PM" src="https://github.com/user-attachments/assets/a4c26fae-9316-4435-b532-e61d01455dde" />
+<img width="930" height="687" alt="Screenshot 2026-03-31 at 8 33 15 PM" src="https://github.com/user-attachments/assets/a49133a9-c8cb-4735-9613-62c77044b90f" />
+
 
 ### Exporting your Zerodha holdings
 
