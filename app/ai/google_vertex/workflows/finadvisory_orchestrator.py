@@ -12,8 +12,13 @@ class FinAdvisorOrchestrator:
     Orchestrator class responsible for managing the end-to-end portfolio analysis workflow.
     """
 
-    @staticmethod
-    def get_pipeline() -> SequentialAgent:
+    def __init__(self):
+        self.fin_advisor_agent = FinAdvisorAgent(config=None)
+        self.formatter_agent = FormatterAgent(config=None)
+        self.data_store_agent = DataStoreAgent(config=None)
+   
+
+    def get_pipeline(self) -> SequentialAgent:
         """
         Constructs and returns the core agent pipeline hierarchy.
         This method is essential for deployment to Vertex AI Agent Engine.
@@ -23,21 +28,17 @@ class FinAdvisorOrchestrator:
         """
         print("[FinAdvisorOrchestrator] Creating new pipeline with FinAdvisorAgent and FormatterAgent")
 
-        FinAdvisorAgent.set_temperature(0.1)
-        FinAdvisorAgent.set_max_output_tokens(100000)
-
         # We use fresh instances to avoid parent_agent assignment errors
         return SequentialAgent(
             name="PortfolioPipeline",
             sub_agents=[
-                FinAdvisorAgent.get_new_agent(),
-                FormatterAgent.get_new_agent(),
-                DataStoreAgent.get_new_agent()
+                self.fin_advisor_agent.agent(),
+                self.formatter_agent.agent(),
+                self.data_store_agent.agent()
             ]
         )
 
-    @staticmethod
-    async def analyze_portfolio(user_id: str, file_content: list):
+    async def analyze_portfolio(self, user_id: str, file_content: list):
         """
         Executes the sequential multi-agent pipeline to analyze stock data.
 
@@ -50,13 +51,12 @@ class FinAdvisorOrchestrator:
 
         # Update grounding instructions
         print(f"[analyze_portfolio] Appending instruction for stocks: {file_content}")
-        FinAdvisorAgent.append_instruction(
-            f"TASK: Analyze ONLY the stocks provided in: {file_content}."
-        )
+
+        self.fin_advisor_agent.instruction(f"TASK: Analyze ONLY the stocks provided in: {file_content}.")
 
         # Retrieve the pipeline from the new helper method
         print("[analyze_portfolio] Retrieving pipeline")
-        portfolio_pipeline = FinAdvisorOrchestrator.get_pipeline()
+        portfolio_pipeline = self.get_pipeline()
 
         # Initialize the Runner
         print("[analyze_portfolio] Initializing Runner")
@@ -88,8 +88,18 @@ class FinAdvisorOrchestrator:
             user_id=user_id
         ):
             if event.is_final_response():
-                final_json = event.content.parts[0].text
-                print(f"[analyze_portfolio] Final response: {final_json}")
+                print(f"[analyze_portfolio] Final response:")
 
-        print("[analyze_portfolio] No final response received")
-        return None
+        session_state = await session_service.get_session(
+            app_name="FinApp",
+            user_id=user_id,
+            session_id=session.id
+        )
+
+        formatted_data = session_state.state.get("formatted_data")
+
+        if not formatted_data:
+            print("[analyze_portfolio] Warning: formatted_data not found in session state")
+            return None
+
+        print(f"[analyze_portfolio] Final JSON: {formatted_data}")

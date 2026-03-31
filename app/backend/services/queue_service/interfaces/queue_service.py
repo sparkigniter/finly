@@ -8,5 +8,5 @@ class QueueService :
     def pull(self, queue: str) -> None:
         pass
 
-    def aknowledge(self, message_id: str, queue: str) -> None:
+    def acknowledge(self, message_id: str, queue: str) -> None:
         pass

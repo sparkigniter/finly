@@ -16,7 +16,6 @@ def store_portfolio_analysis(analysis_data: str, context: ToolContext) -> str:
     doc_ref = db.collection("portfolio_history").document()
     #user_id = context.state.get("user_id", "default_user")
     
-    
     data = {
         "user_id": user_id,
         "analysis_data": analysis_data,

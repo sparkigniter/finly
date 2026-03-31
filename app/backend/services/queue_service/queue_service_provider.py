@@ -14,6 +14,6 @@ class QueueServiceProvider :
     def pull(self, queue: str):
         return self.__client.pull(queue= queue)
     
-    def aknowledge(self, message_id: str, queue: str):
-        self.__client.aknowledge(message_id= message_id, queue= queue)
+    def acknowledge(self, message_id: str, queue: str):
+        self.__client.acknowledge(message_id= message_id, queue= queue)
     

@@ -2,7 +2,7 @@ import sys
 import asyncio
 from dotenv import load_dotenv
 from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
-from app.backend.services.container import container
+from app.backend.services.container import Container
 load_dotenv()
 
 async def run_batch(queue_name: str):
@@ -10,7 +10,7 @@ async def run_batch(queue_name: str):
     match queue_name:
         case ProtfolioAnalyseQueue.JOB_NAME:
             # We 'await' here because consume() is an async function
-            await container.protfolio_analysis_queue.consume()
+            await Container.get().get_portfolio_analysis_queue.consume()
         case _:
             print(f"Unknown queue: {queue_name}")
 
