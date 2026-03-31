@@ -1,16 +1,21 @@
 from datetime import timezone, datetime
 from fastapi import FastAPI, UploadFile, File
 from dotenv import load_dotenv
+from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import json
 from app.backend.services.file_service.file_service_provider import FileServiceProvider
 from app.backend.services.file_service.zeroda import ZerodhaFileService
 from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import FinAdvisorOrchestrator
-from app.backend.services.container import container
+from app.backend.services.container import Container
 from fastapi.middleware.cors import CORSMiddleware
+from app.backend.dtos.create_user import UserCreateDto
+from app.backend.dtos.login import LoginDto
+from app.backend.services.auth_service.middlewares.auth_middleware import verify_token
+from app.backend.services.auth_service.token import Token
 
-
-load_dotenv()  
+load_dotenv()
 
 app = FastAPI()
 
@@ -30,40 +35,27 @@ app.add_middleware(
 )
 
 @app.post("/analyze-portfolio")
-async def analyze_portfolio(file: UploadFile = File(...)):
+async def analyze_portfolio(file: UploadFile = File(...), token: Token = Depends(verify_token)):
     """ API to analyze the portfolio data"""
-    portfolio_data: dict = await container.file_service.parse_file(file= file)
+
+    portfolio_data: dict = await Container.get().get_file_service.parse_file(file)
+    
     queue_data: dict = {
         "data": portfolio_data,
         "pushed_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     }
-    container.protfolio_analysis_queue.push(queue_data)
+    Container.get().get_portfolio_analysis_queue.push(queue_data)
     return {
         "status": "success",
         "message": "We are analysing the stocks. You will get email notification once succeeded."
     }
 
-
-async def process_portfolio(file): 
-    """ process the portfolio data """
-    try:  
-        stocks = await container.file_service.parse_file(file= file)
-        batch_size = 30
-        for i in range(0, len(stocks), batch_size):
-            batch = stocks[i:i + batch_size]
-            print(f"Processing batch: {batch}")
-            await FinAdvisorOrchestrator.analyze_portfolio(
-                user_id="test",
-                file_content=json.dumps(batch))
-
-        return {
-            "status": "success",
-        }
-    except Exception as e:
-        return {
-            "status": "error",
-            "message": str(e)
-        }
+# @app.get("/portfolio/{user_id}")
+# async def fetch_ui_data(user_id: str , token: Token = Depends(verify_token)):
+#     # This directly fetches the JSON string from SQL
+#     data = get_latest_analysis(user_id)
+#     json_data = json.loads(data)
+#     return json_data
 
 @app.get("/portfolio/{user_id}")
 async def fetch_ui_data(user_id: str):
@@ -71,6 +63,19 @@ async def fetch_ui_data(user_id: str):
     data = get_latest_analysis(user_id)
     json_data = json.loads(data)
     return json_data
+
+@app.post("/user")
+async def register_user(user: UserCreateDto):
+    user = Container.get().get_auth_service_provider.register_user(user.email, user.password)
+    return "success"
+
+@app.post("/login")
+async def authenticate_user(user: LoginDto):
+    try:
+        token = Container.get().get_auth_service_provider.authenticate(user.email, user.password)
+        return token.to_dict()
+    except Exception as e:
+        return str(e)
 
 
 if __name__ == "__main__":
