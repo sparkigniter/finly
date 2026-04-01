@@ -21,7 +21,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pylint
-          pip install -r requirements.txt      # ← this was missing
+          pip install -r app/backend/requirements.txt
 
       - name: Analysing the code with pylint
         run: |
