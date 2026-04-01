@@ -1,16 +1,18 @@
+"""Token.py"""
 import jwt
 
 
 class Token:
-    def __init__(self, tokenString: str):
-        self.tokenString = tokenString
+    """A simple wrapper around JWT tokens to provide easy access to claims and metadata."""
+    def __init__(self, token_string: str):
+        self.token_string = token_string
         self.decoded_token = self.decode()
 
     def decode(self) -> dict:
         """Decodes the payload without verifying the signature (for reading data)."""
         try:
             return jwt.decode(
-                self.tokenString, options={
+                self.token_string, options={
                     "verify_signature": False})
         except Exception:
             # Returns an empty dict if the string isn't a valid JWT format
@@ -27,18 +29,23 @@ class Token:
         return self.decoded_token.get("exp")
 
     def get_issued_at(self) -> int:
+        """Time the token was issued (Unix timestamp)."""
         return self.decoded_token.get("iat")
 
     def get_issuer(self) -> str:
+        """The issuer of the token (e.g., 'https://securetoken.google.com/your-project-id')."""
         return self.decoded_token.get("iss")
 
     def get_audience(self) -> str:
+        """The intended audience for the token (e.g., your Firebase project ID)."""
         return self.decoded_token.get("aud")
 
     def get_not_before(self) -> int:
+        """The time before which the token is not valid (Unix timestamp)."""
         return self.decoded_token.get("nbf")
 
     def get_id(self) -> str:
+        """JWT ID (a unique identifier for the token)."""
         return self.decoded_token.get("jti")
 
     # --- HEADER / METADATA GETTERS ---
@@ -46,7 +53,7 @@ class Token:
     def get_header(self) -> dict:
         """Extracts the header (alg, kid, typ) from the token string."""
         try:
-            return jwt.get_unverified_header(self.tokenString)
+            return jwt.get_unverified_header(self.token_string)
         except BaseException:
             return {}
 
@@ -78,12 +85,13 @@ class Token:
     def verify_signature(self, secret: str, algorithm: str = "HS256") -> bool:
         """Verifies the signature using a local secret key (Symmetric)."""
         try:
-            jwt.decode(self.tokenString, secret, algorithms=[algorithm])
+            jwt.decode(self.token_string, secret, algorithms=[algorithm])
             return True
         except (jwt.exceptions.InvalidSignatureError, jwt.exceptions.InvalidTokenError):
             return False
 
     def to_dict(self) -> dict:
+        """Returns a dictionary representation of the token, including the token string and its expiry."""
         return {
-            "tokenString": self.tokenString,
+            "tokenString": self.token_string,
             "expires_at": self.get_expiry()}

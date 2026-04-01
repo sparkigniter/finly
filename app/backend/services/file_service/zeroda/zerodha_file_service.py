@@ -1,10 +1,13 @@
+"""ZerodhaFileService.py"""
 from fastapi import UploadFile
 import pandas as pd
 import io
 
 
 class ZerodhaFileService:
+    """Service to parse Zerodha portfolio export files."""
     async def parse_file(self, file: UploadFile) -> dict:
+        """Parses the uploaded Zerodha portfolio file and extracts relevant stock data."""
         file_bytes = await file.read()
         # Load raw sheet without headers
         raw_df = pd.read_excel(io.BytesIO(file_bytes), header=None)

@@ -10,6 +10,7 @@ from app.backend.services.auth_service.token import Token
 
 
 class Auth:
+    """Authentication class responsible for handling user registration, authentication, and token verification using Firebase."""
     def __init__(self):
         self.api_key = os.getenv("FIREBASE_API_KEY")
         self.auth_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={self.api_key}"
@@ -65,10 +66,10 @@ class Auth:
             # Catch-all for unexpected issues
             raise Exception(f"An unexpected error occurred: {str(e)}") from e
 
-    def verify_token(self, tokenString: str) -> Token:
+    def verify_token(self, token_string: str) -> Token:
         """Verifies the validity of a provided authentication token."""
         try:
-            auth.verify_id_token(tokenString)
-            return Token(tokenString=tokenString)
+            auth.verify_id_token(token_string)
+            return Token(token_string=token_string)
         except Exception as e:
             raise Exception(f"Token verification failed: {str(e)}") from e
