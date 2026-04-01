@@ -1,4 +1,4 @@
-name: Auto Fix Pylint Issues
+name: Auto-fix Python Lint Issues
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  fix-pylint:
+  autofix:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,32 +20,54 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Install formatting tools
+      - name: Install autofix tools
         run: |
           python -m pip install --upgrade pip
-          pip install ruff
+          pip install ruff autopep8
 
-      - name: Auto-fix lint issues
+      # ✅ Fix as much as possible with ruff
+      # Never fail even if issues remain
+      - name: Ruff auto-fix (safe fixes only)
         run: |
-          ruff check . --fix
-          ruff format .
+          ruff check . --fix || true
+          ruff format . || true
 
+      # ✅ Aggressive whitespace & formatting fixes
+      - name: Autopep8 aggressive fixes
+        run: |
+          autopep8 --in-place --recursive --aggressive --aggressive . || true
+
+      # ✅ Final safety net: trailing whitespace
+      - name: Remove trailing whitespace
+        run: |
+          find . -name "*.py" -exec sed -i 's/[ \t]*$//' {} +
+
+      # ✅ Create PR ONLY if something changed
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: pylint-auto-fix
-          title: "chore: auto-fix pylint issues"
-          commit-message: "chore: auto-fix pylint issues"
+          branch: pylint-auto-fixes
+          title: "chore: auto-fix python lint issues"
+          commit-message: "chore: auto-fix python lint issues"
           body: |
-            This PR contains automated fixes for pylint-related issues:
-            - Code formatting
-            - Import cleanup
-            - Common static issues
+            This PR contains **automated fixes only**.
 
-            Generated automatically.
+            ✅ Fixed automatically:
+            - Trailing whitespace
+            - Formatting issues
+            - Import cleanup
+            - Simple style violations
+
+            ❌ Not auto-fixed (by design):
+            - Missing docstrings
+            - Duplicate code
+            - Design / complexity issues
+            - Intentional re-exports in __init__.py
+
+            These remaining issues require manual review.
           delete-branch: true
