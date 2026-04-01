@@ -1,4 +1,5 @@
 """Module responsible for handling portfolio analysis tasks using a queue system."""
+
 import json
 from google.api_core import exceptions
 from app.backend.services.queue_service.queue_service_provider import (
@@ -11,6 +12,7 @@ from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
 
 class ProtfolioAnalyseQueue:
     """Queue class responsible for handling portfolio analysis tasks."""
+
     JOB_NAME = "protfolio-analysis-queue"
 
     def __init__(

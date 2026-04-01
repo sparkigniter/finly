@@ -1,4 +1,5 @@
 """Module responsible for handling authentication using Firebase."""
+
 import os
 import requests
 from requests.exceptions import HTTPError, ConnectionError, Timeout
@@ -49,9 +50,11 @@ class Auth:
 
         except Timeout as exe:
             raise Exception(
-                "Authentication request timed out. Please try again.") from exe
+                "Authentication request timed out. Please try again."
+            ) from exe
         except ConnectionError as exe:
-            raise Exception("Network error: Could not reach the auth server.") from exe
+            raise Exception(
+                "Network error: Could not reach the auth server.") from exe
         except HTTPError as exe:
             error_msg = (
                 data.get("error", {}).get("message", "AUTH_FAILED")
