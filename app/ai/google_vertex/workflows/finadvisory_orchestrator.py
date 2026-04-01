@@ -7,6 +7,7 @@ from app.ai.google_vertex.agents.finadvisory.agent import FinAdvisorAgent
 from app.ai.google_vertex.agents.formatter.agent import FormatterAgent
 from app.ai.google_vertex.agents.datastore.agent import DataStoreAgent
 
+
 class FinAdvisorOrchestrator:
     """
     Orchestrator class responsible for managing the end-to-end portfolio analysis workflow.
@@ -16,7 +17,6 @@ class FinAdvisorOrchestrator:
         self.fin_advisor_agent = FinAdvisorAgent(config=None)
         self.formatter_agent = FormatterAgent(config=None)
         self.data_store_agent = DataStoreAgent(config=None)
-   
 
     def get_pipeline(self) -> SequentialAgent:
         """
@@ -26,7 +26,9 @@ class FinAdvisorOrchestrator:
         Returns:
             SequentialAgent: The orchestrator's root agent containing sub-agents.
         """
-        print("[FinAdvisorOrchestrator] Creating new pipeline with FinAdvisorAgent and FormatterAgent")
+        print(
+            "[FinAdvisorOrchestrator] Creating new pipeline with FinAdvisorAgent and FormatterAgent"
+        )
 
         # We use fresh instances to avoid parent_agent assignment errors
         return SequentialAgent(
@@ -34,8 +36,8 @@ class FinAdvisorOrchestrator:
             sub_agents=[
                 self.fin_advisor_agent.agent(),
                 self.formatter_agent.agent(),
-                self.data_store_agent.agent()
-            ]
+                self.data_store_agent.agent(),
+            ],
         )
 
     async def analyze_portfolio(self, user_id: str, file_content: list):
@@ -50,9 +52,12 @@ class FinAdvisorOrchestrator:
         session_service = InMemorySessionService()
 
         # Update grounding instructions
-        print(f"[analyze_portfolio] Appending instruction for stocks: {file_content}")
+        print(
+            f"[analyze_portfolio] Appending instruction for stocks: {file_content}")
 
-        self.fin_advisor_agent.instruction(f"TASK: Analyze ONLY the stocks provided in: {file_content}.")
+        self.fin_advisor_agent.instruction(
+            f"TASK: Analyze ONLY the stocks provided in: {file_content}."
+        )
 
         # Retrieve the pipeline from the new helper method
         print("[analyze_portfolio] Retrieving pipeline")
@@ -63,44 +68,39 @@ class FinAdvisorOrchestrator:
         runner = Runner(
             agent=portfolio_pipeline,
             session_service=session_service,
-            app_name="FinApp"
-        )
+            app_name="FinApp")
 
         # Create a unique session
         print("[analyze_portfolio] Creating session")
         session = await session_service.create_session(
-            app_name="FinApp",
-            user_id=user_id,
-            state= {"user_id": user_id}
+            app_name="FinApp", user_id=user_id, state={"user_id": user_id}
         )
 
         # Prepare the user message
         print("[analyze_portfolio] Preparing user message")
         user_message = types.Content(
-            role="user",
-            parts=[types.Part.from_text(text=f"Analyze the stocks: {file_content}.")]
-        )
+            role="user", parts=[
+                types.Part.from_text(
+                    text=f"Analyze the stocks: {file_content}.")], )
 
         # Execution loop
         print("[analyze_portfolio] Starting execution loop")
         async for event in runner.run_async(
-            new_message=user_message,
-            session_id=session.id,
-            user_id=user_id
+            new_message=user_message, session_id=session.id, user_id=user_id
         ):
             if event.is_final_response():
-                print(f"[analyze_portfolio] Final response:")
+                print("[analyze_portfolio] Final response:")
 
         session_state = await session_service.get_session(
-            app_name="FinApp",
-            user_id=user_id,
-            session_id=session.id
+            app_name="FinApp", user_id=user_id, session_id=session.id
         )
 
         formatted_data = session_state.state.get("formatted_data")
 
         if not formatted_data:
-            print("[analyze_portfolio] Warning: formatted_data not found in session state")
+            print(
+                "[analyze_portfolio] Warning: formatted_data not found in session state"
+            )
             return None
 
         print(f"[analyze_portfolio] Final JSON: {formatted_data}")

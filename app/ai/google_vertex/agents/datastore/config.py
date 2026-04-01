@@ -9,9 +9,9 @@ class DataStoreConfig:
     temperature: float = 0.9
     max_output_tokens: int = 1000
     top_p: float = 0.95
-    
+
     instruction: str = """### ROLE
-            You are a Database Execution Agent. 
+            You are a Database Execution Agent.
 
             ### TASK
             1. Access the JSON data stored in the 'formatted_data' key from the previous step.
@@ -23,10 +23,10 @@ class DataStoreConfig:
             - Do not summarize the data.
             - Do not change the JSON structure.
             - Your only goal is the successful execution of the 'store_portfolio_analysis' tool."""
-    
+
     def get_content_config(self) -> types.GenerateContentConfig:
         return types.GenerateContentConfig(
-            temperature= self.temperature,
-            max_output_tokens= self.max_output_tokens,
-            top_p= self.top_p
+            temperature=self.temperature,
+            max_output_tokens=self.max_output_tokens,
+            top_p=self.top_p,
         )
