@@ -1,4 +1,5 @@
 """This module defines the FinAdvisorAgent for protfolio analysis."""
+
 from typing import Optional
 from google.adk import Agent
 from google.adk.tools import google_search_tool

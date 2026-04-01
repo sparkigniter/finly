@@ -1,4 +1,5 @@
 """Configuration settings for the Financial Advisor Agent."""
+
 from dataclasses import dataclass
 from google.genai import types
 
