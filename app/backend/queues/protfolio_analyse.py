@@ -1,3 +1,4 @@
+"""Module responsible for handling portfolio analysis tasks using a queue system."""
 import json
 from google.api_core import exceptions
 from app.backend.services.queue_service.queue_service_provider import (
@@ -9,6 +10,7 @@ from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
 
 
 class ProtfolioAnalyseQueue:
+    """Queue class responsible for handling portfolio analysis tasks."""
     JOB_NAME = "protfolio-analysis-queue"
 
     def __init__(
@@ -20,9 +22,11 @@ class ProtfolioAnalyseQueue:
         self.__orchestrator__ = orchestrator
 
     def push(self, data):
+        """Pushes a new portfolio analysis task to the queue."""
         self.__queue_service_provider__.push(queue=self.JOB_NAME, data=data)
 
     async def consume(self):
+        """Consumes messages from the queue and processes them using the orchestrator."""
         try:
             message = self.__queue_service_provider__.pull(queue=self.JOB_NAME)
             for msg in message.received_messages:

@@ -16,3 +16,6 @@ dist/
 
 #logs
 *.log
+
+app/backend/.env
+app/frontend/.env

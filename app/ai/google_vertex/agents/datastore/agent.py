@@ -1,6 +1,7 @@
+"""This agent is responsible for storing portfolio analysis data in the database."""
+from typing import Optional
 from google.adk import Agent
 from app.ai.google_vertex.agents.formatter.schemas.response import PortfolioBreakdown
-from typing import Optional
 from app.ai.google_vertex.agents.tools.firestore_datastore import (
     store_portfolio_analysis,
 )
@@ -51,4 +52,5 @@ class DataStoreAgent:
         return agent
 
     def agent(self) -> Agent:
+        """Provides access to the Agent instance."""
         return DataStoreAgent._agent

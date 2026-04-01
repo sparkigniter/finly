@@ -1,3 +1,4 @@
+"""Configuration settings for the DataStore Agent."""
 from google.genai import types
 
 
@@ -25,6 +26,7 @@ class DataStoreConfig:
             - Your only goal is the successful execution of the 'store_portfolio_analysis' tool."""
 
     def get_content_config(self) -> types.GenerateContentConfig:
+        """Returns the content generation configuration for the agent."""
         return types.GenerateContentConfig(
             temperature=self.temperature,
             max_output_tokens=self.max_output_tokens,

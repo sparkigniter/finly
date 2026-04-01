@@ -1,6 +1,7 @@
+"""Agent responsible for data restructuring and validation."""
+from typing import Optional
 from google.adk import Agent
 from app.ai.google_vertex.agents.formatter.schemas.response import PortfolioBreakdown
-from typing import Optional
 from app.ai.google_vertex.agents.formatter.config import FormatterConfig
 
 
@@ -47,4 +48,5 @@ class FormatterAgent:
         return agent
 
     def agent(self) -> Agent:
+        """Provides access to the Agent instance."""
         return FormatterAgent._agent

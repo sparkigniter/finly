@@ -1,3 +1,4 @@
+"""Implements Firestore integration for storing and retrieving portfolio analysis results."""
 from google.cloud import firestore
 from google.adk.tools import ToolContext
 

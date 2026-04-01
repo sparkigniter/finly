@@ -1,3 +1,4 @@
+"""Deployment script for Google Vertex AI agent."""
 from vertexai import agent_engines
 from vertexai.preview.reasoning_engines import AdkApp
 
@@ -8,6 +9,7 @@ from app.ai.google_vertex.clients.vertext_client import VertexClient
 
 
 def create() -> None:
+    """Creates and deploys the Google Vertex AI agent."""
     # 1. Clean up existing agents with the same name to avoid duplicates
     display_name = "PortfolioPipeline"  # Matches your root_agent.name
 
@@ -21,7 +23,8 @@ def create() -> None:
         existing.delete(force=True)
 
     # 2. Retrieve the Root Pipeline
-    root_agent = FinAdvisorOrchestrator.get_pipeline()
+
+    root_agent = FinAdvisorOrchestrator().get_pipeline()
 
     # 3. Wrap in AdkApp
     adk_app = AdkApp(agent=root_agent, enable_tracing=True)
@@ -48,6 +51,7 @@ def create() -> None:
 
 
 def delete(resource_id: str) -> None:
+    """Deletes a deployed agent by resource ID."""
     remote_agent = agent_engines.get(resource_id)
     remote_agent.delete(force=True)
     print(f"Deleted remote agent: {resource_id}")
