@@ -7,7 +7,9 @@ from app.backend.services.container import Container
 # Standard FastAPI helper to handle 'Bearer <token>' headers
 security = HTTPBearer()
 
-async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+
+async def verify_token(
+        credentials: HTTPAuthorizationCredentials = Depends(security)):
     """
     Middleware-style dependency to verify the token.
     """
@@ -20,5 +22,5 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
             detail="Token has expired",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     return Token(tokenString=token_string)

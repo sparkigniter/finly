@@ -1,8 +1,11 @@
 from google.adk import Agent
 from app.ai.google_vertex.agents.formatter.schemas.response import PortfolioBreakdown
 from typing import Optional
-from app.ai.google_vertex.agents.tools.firestore_datastore import store_portfolio_analysis, get_latest_analysis
+from app.ai.google_vertex.agents.tools.firestore_datastore import (
+    store_portfolio_analysis,
+)
 from app.ai.google_vertex.agents.datastore.config import DataStoreConfig
+
 
 class DataStoreAgent:
     """
@@ -23,7 +26,6 @@ class DataStoreAgent:
         self.config = config or DataStoreConfig()
         self._create_agent()
 
-
     def _create_agent(self) -> Agent:
         """
         Initializes a fresh Agent instance for storing portfolio analysis data.
@@ -43,7 +45,7 @@ class DataStoreAgent:
             instruction=self.config.instruction,
             generate_content_config=self.config.get_content_config(),
             output_schema=PortfolioBreakdown,
-            tools= [store_portfolio_analysis]
+            tools=[store_portfolio_analysis],
         )
         DataStoreAgent._agent = agent
         return agent

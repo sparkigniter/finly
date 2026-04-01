@@ -1,10 +1,10 @@
 from typing import Protocol
 
+
 class User(Protocol):
     user_id: str
     email: str
     display_name: str
-
 
     def get_name(self) -> str:
         pass

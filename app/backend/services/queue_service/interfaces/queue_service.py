@@ -1,8 +1,5 @@
-from typing import Protocol
-
-class QueueService :
-
-    def push(self, queue:str, data: dict) -> None:
+class QueueService:
+    def push(self, queue: str, data: dict) -> None:
         pass
 
     def pull(self, queue: str) -> None:
