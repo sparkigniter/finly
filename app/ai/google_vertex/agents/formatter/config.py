@@ -1,5 +1,6 @@
-from google.genai import types
+"""Configuration settings for the Formatter Agent."""
 from dataclasses import dataclass
+from google.genai import types
 
 
 @dataclass
@@ -24,6 +25,7 @@ class FormatterConfig:
         "5. OUTPUT: A single valid JSON object only. No markdown, no code blocks, no explanation.\n")
 
     def get_content_config(self) -> types.GenerateContentConfig:
+        """Returns the content generation configuration for the agent."""
         return types.GenerateContentConfig(
             temperature=self.temperature,
             max_output_tokens=self.max_output_tokens,

@@ -1,6 +1,7 @@
+"""This module defines the FinAdvisorAgent for protfolio analysis."""
+from typing import Optional
 from google.adk import Agent
 from google.adk.tools import google_search_tool
-from typing import Optional
 from app.ai.google_vertex.agents.finadvisory.config import FinAdvisorConfig
 
 
@@ -48,7 +49,9 @@ class FinAdvisorAgent:
         return agent
 
     def agent(self) -> Agent:
+        """Provides access to the Agent instance."""
         return FinAdvisorAgent._agent
 
     def instruction(self, instruction: str):
+        """Dynamically updates the agent's instruction."""
         self._agent.instruction = instruction

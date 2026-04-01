@@ -1,10 +1,10 @@
+"""This module defines the API endpoints for the portfolio analysis application."""
 from datetime import timezone, datetime
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from fastapi import Depends, HTTPException
 from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis
 from app.backend.services.container import Container
-from fastapi.middleware.cors import CORSMiddleware
 from app.backend.dtos.create_user import UserCreateDto
 from app.backend.dtos.login import LoginDto
 from app.backend.services.auth_service.middlewares.auth_middleware import verify_token
@@ -58,7 +58,7 @@ async def analyze_portfolio(
 
 @app.get("/portfolio")
 async def fetch_ui_data(token: Token = Depends(verify_token)):
-    # This directly fetches the JSON string from SQL
+    """API to fetch the latest portfolio analysis data for the UI."""
     user_id = token.get_claim("user_id")
     if user_id is None:
         raise HTTPException(status_code=401, detail="Unauthorized")
@@ -68,6 +68,7 @@ async def fetch_ui_data(token: Token = Depends(verify_token)):
 
 @app.post("/user")
 async def register_user(user: UserCreateDto):
+    """API to register a new user."""
     user = Container.get().get_auth_service_provider.register_user(
         user.email, user.password
     )
@@ -76,6 +77,7 @@ async def register_user(user: UserCreateDto):
 
 @app.post("/login")
 async def authenticate_user(user: LoginDto):
+    """API to authenticate a user and return a token."""
     try:
         token = Container.get().get_auth_service_provider.authenticate(
             user.email, user.password

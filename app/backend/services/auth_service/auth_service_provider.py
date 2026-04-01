@@ -1,3 +1,4 @@
+"""Module responsible for providing authentication services and user management."""
 from app.backend.services.auth_service.interfaces.auth_service import AuthService
 from app.backend.services.auth_service.interfaces.user import User as UserInterface
 
@@ -11,6 +12,7 @@ class AuthServiceProvider:
         self.auth_service = auth_service
 
     def register_user(self, email: str, password: str) -> UserInterface:
+        """Registers a new user with the provided email and password."""
         return self.auth_service.register_user(email, password)
 
     def authenticate(self, email: str, password: str) -> bool:
