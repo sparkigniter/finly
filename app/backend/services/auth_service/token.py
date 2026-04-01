@@ -1,9 +1,11 @@
 """Token.py"""
+
 import jwt
 
 
 class Token:
     """A simple wrapper around JWT tokens to provide easy access to claims and metadata."""
+
     def __init__(self, token_string: str):
         self.token_string = token_string
         self.decoded_token = self.decode()

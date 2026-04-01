@@ -11,6 +11,7 @@ from app.backend.services.auth_service.token import Token
 
 class Auth:
     """Authentication class responsible for handling user registration, authentication, and token verification using Firebase."""
+
     def __init__(self):
         self.api_key = os.getenv("FIREBASE_API_KEY")
         self.auth_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={self.api_key}"
