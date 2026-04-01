@@ -1,4 +1,5 @@
 """Deployment script for Google Vertex AI agent."""
+
 from vertexai import agent_engines
 from vertexai.preview.reasoning_engines import AdkApp
 

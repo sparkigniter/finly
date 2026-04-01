@@ -1,4 +1,5 @@
 """Configuration settings for the DataStore Agent."""
+
 from google.genai import types
 
 
