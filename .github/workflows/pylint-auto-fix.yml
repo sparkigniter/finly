@@ -1,0 +1,51 @@
+name: Auto Fix Pylint Issues
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fix-pylint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install formatting tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+
+      - name: Auto-fix lint issues
+        run: |
+          ruff check . --fix
+          ruff format .
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: pylint-auto-fix
+          title: "chore: auto-fix pylint issues"
+          commit-message: "chore: auto-fix pylint issues"
+          body: |
+            This PR contains automated fixes for pylint-related issues:
+            - Code formatting
+            - Import cleanup
+            - Common static issues
+
+            Generated automatically.
+          delete-branch: true
