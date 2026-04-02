@@ -15,12 +15,12 @@ export const Dashboard = () => {
     const [filterType, setFilterType] = useState("All");
     const [sectorType, setSectorType] = useState("All");
 
-    const API_URL = "http://localhost:8000/portfolio";
+    const API_URL = import.meta.env.VITE_API_URL;
     const {token} = useAuth();
 
     const refreshData = useCallback(async () => {
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(API_URL+"/portfolio", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

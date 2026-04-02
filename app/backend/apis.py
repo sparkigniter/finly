@@ -16,9 +16,12 @@ load_dotenv()
 app = FastAPI()
 
 # 1. Define the origins that are allowed to talk to your server
+# Define the origins that are allowed to hit your API
 origins = [
-    "http://localhost:5173",  # Vite default port
-    "http://127.0.0.1:5173",  # Alternative local address
+    "https://localhost",      # Standard Capacitor Android/iOS origin
+    "http://localhost",       # Some local dev environments
+    "http://localhost:5173",  # Your Vite dev server
+    "https://api.manadakathe.com", # Your production frontend domain
 ]
 
 # 2. Add the middleware to the FastAPI app
