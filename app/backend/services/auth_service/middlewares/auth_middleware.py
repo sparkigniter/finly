@@ -15,7 +15,7 @@ async def verify_token(
     """
     token_string = credentials.credentials
     auth_service_provider = Container.get().get_auth_service_provider
-
+    print(f"Verifying token: {token_string}")
     if not auth_service_provider.verify_token(token_string):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

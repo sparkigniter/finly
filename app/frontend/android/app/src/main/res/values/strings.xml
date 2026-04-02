@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">finly</string>
+    <string name="title_activity_main">finly</string>
+    <string name="package_name">com.finance.finly</string>
+    <string name="custom_url_scheme">com.finance.finly</string>
+</resources>

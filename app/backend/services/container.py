@@ -1,3 +1,5 @@
+from app.backend.services.broker_service.broker_service_provider import BrokerServiceProvider
+from app.backend.services.broker_service.kite.client import KiteClient
 from .file_service.zeroda.zerodha_file_service import ZerodhaFileService
 from .file_service.interfaces.file_service import FileService
 from .queue_service.interfaces.queue_service import QueueService
@@ -14,6 +16,7 @@ import os
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
     FinAdvisorOrchestrator,
 )
+from app.backend.services.broker_service.kite.service import KiteBrokerService
 
 
 class Container:
@@ -59,6 +62,19 @@ class Container:
         return ProtfolioAnalyseQueue(
             self.get_queue_service_provider, self.get_finadvisory_orchestrator
         )
+
+    @cached_property
+    def get_kite_client(self) -> KiteClient:
+        return KiteClient()
+    
+    @cached_property
+    def get_kite_service(self) -> KiteBrokerService:
+        return KiteBrokerService(self.get_kite_client)
+    
+    @cached_property
+    def get_broker_service_provider(self) -> BrokerServiceProvider:
+        return BrokerServiceProvider(self.get_kite_service)
+    
 
     def init_firebase(self):
         cert_path = os.environ["FIREBASE_CERT_PATH"]
