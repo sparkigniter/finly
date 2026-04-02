@@ -1,4 +1,5 @@
 """Configuration settings for the Formatter Agent."""
+
 from dataclasses import dataclass
 from google.genai import types
 

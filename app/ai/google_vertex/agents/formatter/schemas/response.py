@@ -1,4 +1,5 @@
 """Defines the response schema for the Formatter Agent."""
+
 from enum import Enum
 from typing import List
 from pydantic import BaseModel, Field
@@ -6,6 +7,7 @@ from pydantic import BaseModel, Field
 
 class Recommendation(str, Enum):
     """Enumeration for stock recommendations."""
+
     BUY = "BUY"
     HOLD = "HOLD"
     SELL = "SELL"
@@ -13,6 +15,7 @@ class Recommendation(str, Enum):
 
 class IndividualStock(BaseModel):
     """Schema representing the structured analysis of an individual stock."""
+
     ticker: str = Field(...,
                         description="The stock ticker symbol (e.g., RELIANCE)")
     performance_pct: float = Field(...,
@@ -35,6 +38,7 @@ class IndividualStock(BaseModel):
 
 class PortfolioSummary(BaseModel):
     """Schema representing the overall portfolio analysis summary."""
+
     total_investment: float
     total_returns: float
     overall_performance_pct: float

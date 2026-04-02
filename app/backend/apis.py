@@ -1,4 +1,5 @@
 """This module defines the API endpoints for the portfolio analysis application."""
+
 from datetime import timezone, datetime
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
