@@ -22,12 +22,12 @@ class AuthServiceProvider:
         """
         return self.auth_service.authenticate(email, password)
 
-    def verify_token(self, tokenString: str) -> bool:
+    def verify_token(self, token_string: str) -> bool:
         """
         Verifies the validity of a provided authentication token.
         """
         # Implementation for token verification
-        return self.auth_service.verify_token(tokenString)
+        return self.auth_service.verify_token(token_string)
 
     def get_user_id(self, token: str) -> str:
         """
