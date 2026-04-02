@@ -18,10 +18,10 @@ app = FastAPI()
 # 1. Define the origins that are allowed to talk to your server
 # Define the origins that are allowed to hit your API
 origins = [
-    "https://localhost",      # Standard Capacitor Android/iOS origin
-    "http://localhost",       # Some local dev environments
+    "https://localhost",  # Standard Capacitor Android/iOS origin
+    "http://localhost",  # Some local dev environments
     "http://localhost:5173",  # Your Vite dev server
-    "https://api.manadakathe.com", # Your production frontend domain
+    "https://api.manadakathe.com",  # Your production frontend domain
 ]
 
 # 2. Add the middleware to the FastAPI app
