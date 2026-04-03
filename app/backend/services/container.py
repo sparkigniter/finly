@@ -76,7 +76,6 @@ class Container:
 
     @cached_property
     def get_kite_service(self) -> KiteBrokerService:
-<<<<<<< HEAD
         return KiteBrokerService(self.get_kite_client, self.get_cache_provider)
     
     @cached_property
@@ -91,13 +90,10 @@ class Container:
     def get_cache_provider(self):
         return CacheProvider(self.get_redis_client)
     
-=======
-        return KiteBrokerService(self.get_kite_client)
 
     @cached_property
     def get_broker_service_provider(self) -> BrokerServiceProvider:
         return BrokerServiceProvider(self.get_kite_service)
->>>>>>> 7947a42c4410abee7c6cc6baa19f7e7ad1d999ca
 
     def init_firebase(self):
         cert_path = os.environ["FIREBASE_CERT_PATH"]

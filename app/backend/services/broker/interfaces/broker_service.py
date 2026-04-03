@@ -1,9 +1,5 @@
 from typing import Protocol
 from app.backend.services.broker.interfaces.holdings import Holdings
-<<<<<<< HEAD
-=======
-
->>>>>>> 7947a42c4410abee7c6cc6baa19f7e7ad1d999ca
 
 class BrokerService(Protocol):
     """Protocol for broker services to implement."""
