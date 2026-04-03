@@ -152,7 +152,10 @@ async def kite_callback(request_token: str, user_id: str):
         "status": "pending",
     }
     Container.get().get_portfolio_analysis_queue.push(queue_data)
-    return {"status": "success", "message": "Kite Connect login successful and portfolio analysis started."}
+    return {
+        "status": "success",
+        "message": "Kite Connect login successful and portfolio analysis started.",
+    }
 
 
 @app.get("/broker/kite/holdings")
