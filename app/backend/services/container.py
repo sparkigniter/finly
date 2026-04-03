@@ -1,22 +1,27 @@
-from .file_service.zeroda.zerodha_file_service import ZerodhaFileService
-from .file_service.interfaces.file_service import FileService
-from .queue_service.interfaces.queue_service import QueueService
-from .queue_service.google_pubsub.pubsub import PubSub
-from .queue_service.queue_service_provider import QueueServiceProvider
-from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
-from app.backend.services.auth_service.auth_service_provider import AuthServiceProvider
-from app.backend.services.auth_service.google_firebase.auth import Auth
-import firebase_admin
-from firebase_admin import credentials
+"""Container module for managing service instances and dependencies."""
+import os
 from functools import cached_property
 from typing import Optional
-import os
+import firebase_admin
+from firebase_admin import credentials
+from app.backend.services.broker.provider import BrokerServiceProvider
+from app.backend.services.broker.kite.client import KiteClient
+from app.backend.services.file.zeroda.service import ZerodhaFileService
+from app.backend.services.file.interfaces.file_service import FileService
+from app.backend.services.queue.interfaces.queue_service import QueueService
+from app.backend.services.queue.google_pubsub.pubsub import PubSub
+from  app.backend.services.queue.provider import QueueServiceProvider
+from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
+from app.backend.services.auth.provider import AuthServiceProvider
+from app.backend.services.auth.google_firebase.auth import Auth
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
     FinAdvisorOrchestrator,
 )
+from app.backend.services.broker.kite.service import KiteBrokerService
 
 
 class Container:
+    """Container class for managing service instances and dependencies."""
     __container: Optional["Container"] = None
 
     @staticmethod
@@ -59,6 +64,19 @@ class Container:
         return ProtfolioAnalyseQueue(
             self.get_queue_service_provider, self.get_finadvisory_orchestrator
         )
+
+    @cached_property
+    def get_kite_client(self) -> KiteClient:
+        return KiteClient()
+    
+    @cached_property
+    def get_kite_service(self) -> KiteBrokerService:
+        return KiteBrokerService(self.get_kite_client)
+    
+    @cached_property
+    def get_broker_service_provider(self) -> BrokerServiceProvider:
+        return BrokerServiceProvider(self.get_kite_service)
+    
 
     def init_firebase(self):
         cert_path = os.environ["FIREBASE_CERT_PATH"]

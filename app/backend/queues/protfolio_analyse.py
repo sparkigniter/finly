@@ -2,7 +2,7 @@
 
 import json
 from google.api_core import exceptions
-from app.backend.services.queue_service.queue_service_provider import (
+from app.backend.services.queue.provider import (
     QueueServiceProvider,
 )
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
