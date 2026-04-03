@@ -1,8 +1,9 @@
-
 from app.backend.services.cache.interfaces.cache import Cache
+
 
 class CacheProvider:
     """Provider for cache services."""
+
     def __init__(self, client: Cache):
         self.client = client
 

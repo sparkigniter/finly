@@ -5,7 +5,6 @@ from functools import cached_property
 from typing import Optional
 import firebase_admin
 from firebase_admin import credentials
-from redis import Redis
 from app.backend.services.broker.provider import BrokerServiceProvider
 from app.backend.services.broker.kite.client import KiteClient
 from app.backend.services.file.zeroda.service import ZerodhaFileService
@@ -77,19 +76,18 @@ class Container:
     @cached_property
     def get_kite_service(self) -> KiteBrokerService:
         return KiteBrokerService(self.get_kite_client, self.get_cache_provider)
-    
+
     @cached_property
     def get_broker_service_provider(self) -> BrokerServiceProvider:
         return BrokerServiceProvider(self.get_kite_service)
-    
+
     @cached_property
     def get_redis_client(self):
         return RedisClient()
-    
+
     @cached_property
     def get_cache_provider(self):
         return CacheProvider(self.get_redis_client)
-    
 
     @cached_property
     def get_broker_service_provider(self) -> BrokerServiceProvider:
