@@ -39,7 +39,7 @@ class ProtfolioAnalyseQueue:
                 await self.__orchestrator__.analyze_portfolio(
                     user_id=data["user_id"], file_content=data["data"]
                 )
-                self.__queue_service_provider__.aknowledge(
+                self.__queue_service_provider__.acknowledge(
                     message_id=msg.ack_id, queue=self.JOB_NAME
                 )
         except exceptions.DeadlineExceeded:
