@@ -99,10 +99,4 @@ class FinAdvisorOrchestrator:
 
         formatted_data = session_state.state.get("formatted_data")
 
-        if not formatted_data:
-            print(
-                "[analyze_portfolio] Warning: formatted_data not found in session state"
-            )
-            return None
-
         print(f"[analyze_portfolio] Final JSON: {formatted_data}")

@@ -4,19 +4,14 @@ from datetime import timezone, datetime
 import os
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import redis
 from dotenv import load_dotenv
 from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis
 from app.backend.services.container import Container
 from app.backend.dtos.create_user import UserCreateDto
 from app.backend.dtos.login import LoginDto
-from app.backend.services.auth.middlewares.auth_middleware import verify_token
+from app.backend.services.auth.middlewares.auth import verify_token
 from app.backend.services.auth.token import Token
 from app.backend.services.broker.interfaces.holdings import Holdings
-
-# TODO: Create a Redis client provider in the container and use it here
-# instead of creating a new instance
-redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
 
 load_dotenv()
 
@@ -73,8 +68,19 @@ async def analyze_portfolio_(token: Token = Depends(verify_token)):
     broker_service = Container.get().get_broker_service_provider
     user_id = token.get_claim("user_id")
     holdings = broker_service.get_holdings(user_id)
+    holdings_data = [
+        {
+            "symbol": h["tradingsymbol"],
+            "quantity": h["quantity"],
+            "average_price": h["average_price"],
+            "last_price": h["last_price"],
+            "pnl": h["pnl"],
+            "exchange": h["exchange"],
+        }
+        for h in holdings
+    ]
     queue_data: dict = {
-        "data": holdings,
+        "data": holdings_data,
         "pushed_at": datetime.now(
             timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
         "user_id": user_id,
@@ -135,8 +141,18 @@ async def kite_callback(request_token: str, user_id: str):
                                  api_secret=os.getenv("KITE_API_SECRET"))
     kite.set_access_token(data["access_token"])
     key = "kite_access_token_" + user_id
-    redis_client.set(key, data["access_token"])
-    return {"message": "Kite Connect login successful"}
+    Container.get().get_cache_provider.set(key, data["access_token"])
+    broker_service = Container.get().get_broker_service_provider
+    holdings = broker_service.get_holdings(user_id)
+    queue_data: dict = {
+        "data": holdings,
+        "pushed_at": datetime.now(
+            timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "user_id": user_id,
+        "status": "pending",
+    }
+    Container.get().get_portfolio_analysis_queue.push(queue_data)
+    return {"status": "success", "message": "Kite Connect login successful and portfolio analysis started."}
 
 
 @app.get("/broker/kite/holdings")
