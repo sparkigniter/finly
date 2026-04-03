@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.backend.services.auth_service.token import Token
+from app.backend.services.auth.token import Token
 from app.backend.services.container import Container
 
 

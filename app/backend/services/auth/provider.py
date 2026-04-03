@@ -1,7 +1,7 @@
 """Module responsible for providing authentication services and user management."""
 
-from app.backend.services.auth_service.interfaces.auth_service import AuthService
-from app.backend.services.auth_service.interfaces.user import User as UserInterface
+from app.backend.services.auth.interfaces.auth_service import AuthService
+from app.backend.services.auth.interfaces.user import User as UserInterface
 
 
 class AuthServiceProvider:

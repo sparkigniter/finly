@@ -1,25 +1,27 @@
-from app.backend.services.broker_service.broker_service_provider import BrokerServiceProvider
-from app.backend.services.broker_service.kite.client import KiteClient
-from .file_service.zeroda.zerodha_file_service import ZerodhaFileService
-from .file_service.interfaces.file_service import FileService
-from .queue_service.interfaces.queue_service import QueueService
-from .queue_service.google_pubsub.pubsub import PubSub
-from .queue_service.queue_service_provider import QueueServiceProvider
-from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
-from app.backend.services.auth_service.auth_service_provider import AuthServiceProvider
-from app.backend.services.auth_service.google_firebase.auth import Auth
-import firebase_admin
-from firebase_admin import credentials
+"""Container module for managing service instances and dependencies."""
+import os
 from functools import cached_property
 from typing import Optional
-import os
+import firebase_admin
+from firebase_admin import credentials
+from app.backend.services.broker.provider import BrokerServiceProvider
+from app.backend.services.broker.kite.client import KiteClient
+from app.backend.services.file.zeroda.service import ZerodhaFileService
+from app.backend.services.file.interfaces.file_service import FileService
+from app.backend.services.queue.interfaces.queue_service import QueueService
+from app.backend.services.queue.google_pubsub.pubsub import PubSub
+from  app.backend.services.queue.provider import QueueServiceProvider
+from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
+from app.backend.services.auth.provider import AuthServiceProvider
+from app.backend.services.auth.google_firebase.auth import Auth
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
     FinAdvisorOrchestrator,
 )
-from app.backend.services.broker_service.kite.service import KiteBrokerService
+from app.backend.services.broker.kite.service import KiteBrokerService
 
 
 class Container:
+    """Container class for managing service instances and dependencies."""
     __container: Optional["Container"] = None
 
     @staticmethod

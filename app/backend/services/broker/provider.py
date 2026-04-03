@@ -1,4 +1,4 @@
-from app.backend.services.broker_service.interfaces.broker_service import BrokerService
+from app.backend.services.broker.interfaces.broker_service import BrokerService
 
 class BrokerServiceProvider:
     """Provider for broker services."""

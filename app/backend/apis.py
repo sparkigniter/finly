@@ -1,6 +1,5 @@
 """This module defines the API endpoints for the portfolio analysis application."""
 
-from curses import raw
 from datetime import timezone, datetime
 import os
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
@@ -11,9 +10,9 @@ from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_ana
 from app.backend.services.container import Container
 from app.backend.dtos.create_user import UserCreateDto
 from app.backend.dtos.login import LoginDto
-from app.backend.services.auth_service.middlewares.auth_middleware import verify_token
-from app.backend.services.auth_service.token import Token
-from app.backend.services.broker_service.interfaces.holdings import Holdings
+from app.backend.services.auth.middlewares.auth_middleware import verify_token
+from app.backend.services.auth.token import Token
+from app.backend.services.broker.interfaces.holdings import Holdings
 
 redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True) #TODO: Create a Redis client provider in the container and use it here instead of creating a new instance
 

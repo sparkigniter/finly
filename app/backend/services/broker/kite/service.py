@@ -1,6 +1,6 @@
 
 import redis
-from app.backend.services.broker_service.kite.client import KiteClient
+from app.backend.services.broker.kite.client import KiteClient
 
 class KiteBrokerService:
     """Service class responsible for handling business logic related to Kite Connect API interactions."""

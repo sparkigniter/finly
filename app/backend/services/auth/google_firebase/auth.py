@@ -4,9 +4,9 @@ import os
 import requests
 from requests.exceptions import HTTPError, ConnectionError, Timeout
 from firebase_admin import auth
-from app.backend.services.auth_service.interfaces.user import User as UserInterface
-from app.backend.services.auth_service.user import User
-from app.backend.services.auth_service.token import Token
+from app.backend.services.auth.interfaces.user import User as UserInterface
+from app.backend.services.auth.user import User
+from app.backend.services.auth.token import Token
 
 
 class Auth:
