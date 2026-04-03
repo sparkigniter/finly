@@ -23,5 +23,4 @@ async def verify_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-
     return Token(token_string=token_string)
