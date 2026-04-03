@@ -1,8 +1,11 @@
 """Queue Service Provider module responsible for providing queue services to the application."""
+
 from app.backend.services.queue.interfaces.queue_service import QueueService
+
 
 class QueueServiceProvider:
     """Provider for queue services."""
+
     __client = None
 
     def __init__(self, client: QueueService):

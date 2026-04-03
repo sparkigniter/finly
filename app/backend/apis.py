@@ -61,6 +61,7 @@ async def analyze_portfolio_file(
         "message": "We are analysing the stocks. You will get email notification once succeeded.",
     }
 
+
 @app.post("/analyze-portfolio")
 async def analyze_portfolio_(token: Token = Depends(verify_token)):
     """Helper function to analyze portfolio data."""
@@ -90,7 +91,6 @@ async def analyze_portfolio_(token: Token = Depends(verify_token)):
         "status": "success",
         "message": "We are analysing the stocks. You will get email notification once succeeded.",
     }
-
 
 
 @app.get("/portfolio")
@@ -132,11 +132,13 @@ async def kite_login(token: Token = Depends(verify_token)):
     login_url += f"&redirect_params=user_id%3D{token.get_claim('user_id')}"
     return {"login_url": login_url}
 
+
 @app.get("/broker/kite/callback")
 async def kite_callback(request_token: str, user_id: str):
     """API to handle Kite Connect callback."""
     kite = Container.get().get_kite_client.get_client()
-    data = kite.generate_session(request_token, api_secret=os.getenv("KITE_API_SECRET"))
+    data = kite.generate_session(request_token,
+                                 api_secret=os.getenv("KITE_API_SECRET"))
     kite.set_access_token(data["access_token"])
     key = "kite_access_token_" + user_id
     Container.get().get_cache_provider.set(key, data["access_token"])
@@ -152,10 +154,15 @@ async def kite_callback(request_token: str, user_id: str):
     Container.get().get_portfolio_analysis_queue.push(queue_data)
     return {"status": "success", "message": "Kite Connect login successful and portfolio analysis started."}
 
+
 @app.get("/broker/kite/holdings")
-async def get_holdings(token: Token = Depends(verify_token), request_token: str = None):
+async def get_holdings(
+        token: Token = Depends(verify_token),
+        request_token: str = None):
     """API to fetch Kite Connect holdings."""
-    data = Container.get().get_broker_service_provider.get_holdings(token.get_claim("user_id"))
+    data = Container.get().get_broker_service_provider.get_holdings(
+        token.get_claim("user_id")
+    )
     return [
         Holdings(
             symbol=h["tradingsymbol"],
@@ -164,7 +171,8 @@ async def get_holdings(token: Token = Depends(verify_token), request_token: str 
             last_price=h["last_price"],
             pnl=h["pnl"],
             exchange=h["exchange"],
-        ) for h in data
+        )
+        for h in data
     ]
 
 

@@ -1,4 +1,5 @@
 """Container module for managing service instances and dependencies."""
+
 import os
 from functools import cached_property
 from typing import Optional
@@ -11,7 +12,7 @@ from app.backend.services.file.zeroda.service import ZerodhaFileService
 from app.backend.services.file.interfaces.file_service import FileService
 from app.backend.services.queue.interfaces.queue_service import QueueService
 from app.backend.services.queue.google_pubsub.pubsub import PubSub
-from  app.backend.services.queue.provider import QueueServiceProvider
+from app.backend.services.queue.provider import QueueServiceProvider
 from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
 from app.backend.services.auth.provider import AuthServiceProvider
 from app.backend.services.auth.google_firebase.auth import Auth
@@ -25,6 +26,7 @@ from app.backend.services.cache.provider import CacheProvider
 
 class Container:
     """Container class for managing service instances and dependencies."""
+
     __container: Optional["Container"] = None
 
     @staticmethod
@@ -71,9 +73,10 @@ class Container:
     @cached_property
     def get_kite_client(self) -> KiteClient:
         return KiteClient()
-    
+
     @cached_property
     def get_kite_service(self) -> KiteBrokerService:
+<<<<<<< HEAD
         return KiteBrokerService(self.get_kite_client, self.get_cache_provider)
     
     @cached_property
@@ -88,6 +91,13 @@ class Container:
     def get_cache_provider(self):
         return CacheProvider(self.get_redis_client)
     
+=======
+        return KiteBrokerService(self.get_kite_client)
+
+    @cached_property
+    def get_broker_service_provider(self) -> BrokerServiceProvider:
+        return BrokerServiceProvider(self.get_kite_service)
+>>>>>>> 7947a42c4410abee7c6cc6baa19f7e7ad1d999ca
 
     def init_firebase(self):
         cert_path = os.environ["FIREBASE_CERT_PATH"]
