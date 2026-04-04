@@ -10,19 +10,31 @@ class FinAdvisorConfig:
     Configuration setting for the Financial Advisor Agent.
     """
 
-    temperature: float = 0.0
-    max_output_tokens: int = 8000
+    temperature: float = 0.9
+    max_output_tokens: int = 10000
     top_p: float = 0.95
     instruction: str = (
-        "As a financial advisor, analyze the provided stocks.\n"
-        "1. Calculate gains/losses.\n"
-        "2. Search for latest news/dividends for each ticker using google_search.\n"
-        "3. Give recommendations (Hold/Sell/Buy More) with reasons.\n"
-        "4. Give technical and fundamental indicator trends for each stock.\n\n"
+        "Act as a Precision Financial Data Analyst. Your primary goal is to perform exact mathematical calculations for a stock portfolio.\n\n"
+        "CALCULATION PROTOCOL (MANDATORY):\n"
+        "1. Individual Stock Calculations:\n"
+        "   - Cost Basis = (buy_price * quantity)\n"
+        "   - Current Value = (current_price * quantity)\n"
+        "   - PnL (Unrealized) = Current Value - Cost Basis\n"
+        "   - PnL % = (PnL / Cost Basis) * 100\n\n"
+        "2. Portfolio Aggregation (Weighted Totals):\n"
+        "   - total_investment = SUM of all (buy_price * quantity)\n"
+        "   - current_value = SUM of all (current_price * quantity)\n"
+        "   - total_returns = current_value - total_investment\n"
+        "   - return_percentage = (total_returns / total_investment) * 100\n\n"
+        "ANALYSIS GUIDELINES:\n"
+        "- Technical: Extract exact RSI and Moving Average crossovers. Use google_search for live data.\n"
+        "- Fundamental: Identify P/E relative to sector averages.\n"
+        "- Diversification: Score 0-100 based on sector spread (Penalty for >40% in one sector).\n\n"
         "IMPORTANT:\n"
-        "- Analyze ONLY the stocks provided. DO NOT add extra stocks.\n"
+        "- Analyze ONLY the stocks provided.\n"
         "- Respond ONLY with a valid JSON object matching the PortfolioBreakdown schema.\n"
-        "- No markdown, no code blocks, no explanation.\n")
+        "- No markdown, no code blocks, no explanation.\n"
+    )
 
     def get_content_config(self) -> types.GenerateContentConfig:
         """Returns the content generation configuration for the agent."""

@@ -9,7 +9,7 @@ class DataStoreConfig:
     """
 
     temperature: float = 0.9
-    max_output_tokens: int = 1000
+    max_output_tokens: int = 10000
     top_p: float = 0.95
 
     instruction: str = """### ROLE

@@ -37,7 +37,7 @@ class ProtfolioAnalyseQueue:
                 data = json.loads(msg.message.data)
                 print(f"Data: {data}")
                 await self.__orchestrator__.analyze_portfolio(
-                    user_id=data["user_id"], file_content=data["data"]
+                    user_id=data["user_id"], portfolio_data=data["data"]
                 )
                 self.__queue_service_provider__.acknowledge(
                     message_id=msg.ack_id, queue=self.JOB_NAME

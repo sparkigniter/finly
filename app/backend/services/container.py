@@ -82,16 +82,12 @@ class Container:
         return BrokerServiceProvider(self.get_kite_service)
 
     @cached_property
-    def get_redis_client(self):
+    def get_redis_client(self) -> RedisClient:
         return RedisClient()
 
     @cached_property
-    def get_cache_provider(self):
+    def get_cache_provider(self) -> CacheProvider:
         return CacheProvider(self.get_redis_client)
-
-    @cached_property
-    def get_broker_service_provider(self) -> BrokerServiceProvider:
-        return BrokerServiceProvider(self.get_kite_service)
 
     def init_firebase(self):
         cert_path = os.environ["FIREBASE_CERT_PATH"]
