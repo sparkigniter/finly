@@ -33,8 +33,7 @@ class FinAdvisorConfig:
         "IMPORTANT:\n"
         "- Analyze ONLY the stocks provided.\n"
         "- Respond ONLY with a valid JSON object matching the PortfolioBreakdown schema.\n"
-        "- No markdown, no code blocks, no explanation.\n"
-    )
+        "- No markdown, no code blocks, no explanation.\n")
 
     def get_content_config(self) -> types.GenerateContentConfig:
         """Returns the content generation configuration for the agent."""
