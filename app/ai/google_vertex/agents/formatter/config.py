@@ -22,8 +22,7 @@ class FormatterConfig:
         "1. Map every field to the PortfolioBreakdown schema—do not skip technical or fundamental fields.\n"
         "2. If a numeric value (like rsi_value) is mentioned in text, cast it to a float.\n"
         "3. Determine 'risk_profile' by evaluating portfolio volatility and sector concentration.\n"
-        "4. OUTPUT: A single valid JSON object only. No markdown, no code blocks.\n"
-    )
+        "4. OUTPUT: A single valid JSON object only. No markdown, no code blocks.\n")
 
     def get_content_config(self) -> types.GenerateContentConfig:
         """Returns the content generation configuration for the agent."""

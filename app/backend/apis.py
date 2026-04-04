@@ -147,11 +147,11 @@ async def kite_callback(request_token: str, user_id: str):
     holdings = broker_service.get_holdings(user_id)
     holdings_data = [
         {
-            "symbol": h["tradingsymbol"], 
-            "quantity": h["quantity"], 
-            "average_price": h["average_price"], 
-            "last_price": h["last_price"], 
-            "pnl": h["pnl"], 
+            "symbol": h["tradingsymbol"],
+            "quantity": h["quantity"],
+            "average_price": h["average_price"],
+            "last_price": h["last_price"],
+            "pnl": h["pnl"],
             "exchange": h["exchange"],
         }
         for h in holdings
