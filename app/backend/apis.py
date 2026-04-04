@@ -79,6 +79,7 @@ async def analyze_portfolio_(token: Token = Depends(verify_token)):
         }
         for h in holdings
     ]
+    print(f"[INFO] Retrieved holdings for user {user_id}: {holdings_data}")
     queue_data: dict = {
         "data": holdings_data,
         "pushed_at": datetime.now(
@@ -144,8 +145,19 @@ async def kite_callback(request_token: str, user_id: str):
     Container.get().get_cache_provider.set(key, data["access_token"])
     broker_service = Container.get().get_broker_service_provider
     holdings = broker_service.get_holdings(user_id)
+    holdings_data = [
+        {
+            "symbol": h["tradingsymbol"], 
+            "quantity": h["quantity"], 
+            "average_price": h["average_price"], 
+            "last_price": h["last_price"], 
+            "pnl": h["pnl"], 
+            "exchange": h["exchange"],
+        }
+        for h in holdings
+    ]
     queue_data: dict = {
-        "data": holdings,
+        "data": holdings_data,
         "pushed_at": datetime.now(
             timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
         "user_id": user_id,

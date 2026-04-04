@@ -1,11 +1,13 @@
 """Implements Firestore integration for storing and retrieving portfolio analysis results."""
 
+import os
+
 from google.cloud import firestore
 from google.adk.tools import ToolContext
 
 # Initialize the Firestore client
 # It will use the project ID from your environment or VertexAIClient.init()
-db = firestore.Client(database="finly")
+db = firestore.Client(database="finly", project=os.environ.get("PROJECT_ID"))
 
 
 def store_portfolio_analysis(analysis_data: str, context: ToolContext) -> str:
