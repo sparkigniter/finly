@@ -56,3 +56,7 @@ class FinAdvisorAgent:
     def instruction(self, instruction: str):
         """Dynamically updates the agent's instruction."""
         self._agent.instruction = instruction
+
+    def update_model(self, model: str):
+        """Dynamically updates the agent's model."""
+        self._agent.model = model

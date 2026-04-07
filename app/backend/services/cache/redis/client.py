@@ -11,8 +11,8 @@ class RedisClient:
     def __init__(self, host: str = "localhost", port: int = 6379, db: int = 0):
         self.client = redis.Redis(
             host=os.environ["REDIS_HOST"],
-            port=os.environ["REDIS_PORT"],
-            db=os.environ["REDIS_DB"],
+            port=int(os.environ["REDIS_PORT"]),
+            db=int(os.environ["REDIS_DB"]),
             decode_responses=True,
         )
 
