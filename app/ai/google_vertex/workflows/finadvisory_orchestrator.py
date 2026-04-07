@@ -1,7 +1,7 @@
 """This module defines the FinAdvisorAgent for protfolio analysis."""
+
 import json
 import asyncio
-import logging
 from datetime import datetime, timezone
 from google.adk.agents import SequentialAgent
 from google.adk.runners import Runner, logger
@@ -24,9 +24,10 @@ from app.ai.errors.error import (
 # Fix: Use explicit Vertex AI production models (-002 suffix).
 MODEL_HIERARCHY = [
     "gemini-1.5-flash-002",  # Most stable, highest quota, lowest cost
-    "gemini-1.5-pro-002",    # Higher intelligence fallback
-    "gemini-1.5-flash-8b"    # Ultra-lightweight emergency fallback
+    "gemini-1.5-pro-002",  # Higher intelligence fallback
+    "gemini-1.5-flash-8b",  # Ultra-lightweight emergency fallback
 ]
+
 
 class FinAdvisorOrchestrator:
     """
@@ -53,15 +54,19 @@ class FinAdvisorOrchestrator:
         """
         if isinstance(portfolio_data, list):
             holdings = portfolio_data
-            pushed_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+            pushed_at = datetime.now(
+                timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
         elif isinstance(portfolio_data, dict):
             holdings = portfolio_data.get("data", [])
             pushed_at = portfolio_data.get("pushed_at", "Unknown")
 
-        logger.info(f"🚀 [DevOps] Starting analysis for {user_id} | Stocks: {len(holdings)}")
+        logger.info(
+            f"🚀 [DevOps] Starting analysis for {user_id} | Stocks: {len(holdings)}"
+        )
 
         if not holdings:
-            raise DataValidationError("Portfolio 'data' key is empty or missing.")
+            raise DataValidationError(
+                "Portfolio 'data' key is empty or missing.")
 
         # Optimization to stay under TPM (Tokens Per Minute) limits
         optimized_data = [
@@ -69,32 +74,27 @@ class FinAdvisorOrchestrator:
                 "symbol": s.get("symbol"),
                 "qty": s.get("quantity"),
                 "avg_price": s.get("average_price"),
-                "ltp": s.get("last_price")
-            } for s in holdings
+                "ltp": s.get("last_price"),
+            }
+            for s in holdings
         ]
 
-        user_message = types.Content(
-            role="user",
-            parts=[
-                types.Part.from_text(
-                    text=f"Analyze this portfolio: {json.dumps(optimized_data)}"
-                )
-            ],
-        )
+        user_message = types.Content(role="user", parts=[types.Part.from_text(
+            text=f"Analyze this portfolio: {json.dumps(optimized_data)}")], )
 
         for model_name in MODEL_HIERARCHY:
             logger.info(f"🛠️ [Attempt] Model: {model_name}")
-            
+
             session_service = InMemorySessionService()
             portfolio_pipeline = self.get_pipeline()
-            
-            if hasattr(self.fin_advisor_agent, 'update_model'):
+
+            if hasattr(self.fin_advisor_agent, "update_model"):
                 self.fin_advisor_agent.update_model(model_name)
 
             runner = Runner(
                 agent=portfolio_pipeline,
                 session_service=session_service,
-                app_name="FinApp"
+                app_name="FinApp",
             )
 
             try:
@@ -103,18 +103,18 @@ class FinAdvisorOrchestrator:
                 )
 
                 final_response_received = False
-                
+
                 async with asyncio.timeout(90):
                     async for event in runner.run_async(
-                        new_message=user_message, 
-                        session_id=session.id, 
-                        user_id=user_id
+                        new_message=user_message, session_id=session.id, user_id=user_id
                     ):
                         if event.is_final_response():
                             final_response_received = True
 
                 if not final_response_received:
-                    raise PortfolioAnalysisError("Pipeline closed without final_response")
+                    raise PortfolioAnalysisError(
+                        "Pipeline closed without final_response"
+                    )
 
                 session_state = await session_service.get_session(
                     app_name="FinApp", user_id=user_id, session_id=session.id
@@ -122,24 +122,33 @@ class FinAdvisorOrchestrator:
 
                 formatted_data = session_state.state.get("formatted_data")
                 if not formatted_data:
-                    raise PortfolioAnalysisError("formatted_data missing from state")
+                    raise PortfolioAnalysisError(
+                        "formatted_data missing from state")
 
                 store_portfolio_analysis(formatted_data, session_state)
                 return formatted_data
 
             except Exception as e:
                 err_msg = str(e).upper()
-                
+
                 # Check for the specific 429/RESOURCE_EXHAUSTED/QUOTA error
-                if any(x in err_msg for x in ["429", "RESOURCE_EXHAUSTED", "QUOTA"]):
-                    logger.warning(f"⚠️ Quota exceeded for {model_name}. Retrying with fallback...")
+                if any(
+                    x in err_msg for x in [
+                        "429",
+                        "RESOURCE_EXHAUSTED",
+                        "QUOTA"]):
+                    logger.warning(
+                        f"⚠️ Quota exceeded for {model_name}. Retrying with fallback..."
+                    )
                     # Small backoff before trying the next model in hierarchy
                     await asyncio.sleep(2)
                     if model_name != MODEL_HIERARCHY[-1]:
-                        continue 
+                        continue
                     else:
-                        raise RateLimitError("Critical: All Vertex AI quotas exhausted. Check Billing.")
-                
+                        raise RateLimitError(
+                            "Critical: All Vertex AI quotas exhausted. Check Billing."
+                        )
+
                 raise PortfolioAnalysisError(f"Analysis failed: {str(e)}")
 
         return None

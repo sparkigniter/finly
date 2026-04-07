@@ -165,7 +165,9 @@ async def kite_callback(request_token: str, user_id: str):
         "status": "pending",
     }
     Container.get().get_portfolio_analysis_queue.push(queue_data)
-    return RedirectResponse(url=f"finly://broker-sync?request_token={request_token}&status=success")
+    return RedirectResponse(
+        url=f"finly://broker-sync?request_token={request_token}&status=success"
+    )
 
     # return {
     #     "status": "success",

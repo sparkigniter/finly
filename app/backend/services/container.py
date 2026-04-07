@@ -106,13 +106,13 @@ class Container:
 
     def init_firebase(self):
         """Initializes the Firebase app with the provided credentials and project ID.
-        
+
         Expects FIREBASE_CERT env var to contain a JSON string with Firebase service account.
         Can also read from a local file at ./firebase-cert.json for local development.
         """
         # Try to get Firebase cert from environment variable first
         firebase_cert_json = os.environ.get("FIREBASE_CERT")
-        
+
         # Fallback to local file for development
         if not firebase_cert_json:
             local_cert_path = "./firebase-cert.json"
@@ -124,18 +124,16 @@ class Container:
                 raise ValueError(
                     "FIREBASE_CERT environment variable not set and "
                     "./firebase-cert.json not found. "
-                    "Please set FIREBASE_CERT env var or provide firebase-cert.json"
-                )
-        
+                    "Please set FIREBASE_CERT env var or provide firebase-cert.json")
+
         # Parse the JSON
         try:
             cert = json.loads(firebase_cert_json)
         except json.JSONDecodeError as e:
             raise ValueError(
                 f"FIREBASE_CERT is not valid JSON: {e}\n"
-                f"Make sure the secret contains valid JSON without extra newlines."
-            )
-        
+                f"Make sure the secret contains valid JSON without extra newlines.")
+
         # Initialize Firebase only once
         if not firebase_admin._apps:
             try:
