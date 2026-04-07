@@ -5,6 +5,7 @@ import os
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from fastapi.responses import RedirectResponse
 from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis
 from app.backend.services.container import Container
 from app.backend.dtos.create_user import UserCreateDto
@@ -164,10 +165,12 @@ async def kite_callback(request_token: str, user_id: str):
         "status": "pending",
     }
     Container.get().get_portfolio_analysis_queue.push(queue_data)
-    return {
-        "status": "success",
-        "message": "Kite Connect login successful and portfolio analysis started.",
-    }
+    return RedirectResponse(url=f"finly://broker-sync?request_token={request_token}&status=success")
+
+    # return {
+    #     "status": "success",
+    #     "message": "Kite Connect login successful and portfolio analysis started.",
+    # }
 
 
 @app.get("/broker/kite/holdings")

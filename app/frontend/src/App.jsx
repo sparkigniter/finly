@@ -5,11 +5,13 @@ import { Dashboard } from './components/Dashboard';
 import { BrokerCallback } from './components/BrokerCallback';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { DeepLinkHandler } from './hooks/DeepLinkHandler';
 
 function App() {
     return (
         <AuthProvider>
             <Router>
+                <DeepLinkHandler />
                 <div className="min-h-screen bg-[#F8FAFC]">
                     <Routes>
                         <Route path="/login" element={<Login />} />
