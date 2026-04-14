@@ -1,18 +1,21 @@
 """This module defines the API endpoints for the portfolio analysis application."""
 
 from datetime import timezone, datetime
+import json
 import os
+import uuid
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
 from fastapi.responses import RedirectResponse
-from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis
+from dotenv import load_dotenv
+from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis, store_portfolio_analysis
 from app.backend.services.container import Container
 from app.backend.dtos.create_user import UserCreateDto
 from app.backend.dtos.login import LoginDto
 from app.backend.services.auth.middlewares.auth import verify_token
 from app.backend.services.auth.token import Token
 from app.backend.services.broker.interfaces.holdings import Holdings
+from app.backend.services.protfolio.service import PortfolioService
 
 load_dotenv()
 
@@ -142,37 +145,43 @@ async def kite_callback(request_token: str, user_id: str):
     data = kite.generate_session(request_token,
                                  api_secret=os.getenv("KITE_API_SECRET"))
     kite.set_access_token(data["access_token"])
-    key = "kite_access_token_" + user_id
-    Container.get().get_cache_provider.set(key, data["access_token"])
     broker_service = Container.get().get_broker_service_provider
-    holdings = broker_service.get_holdings(user_id)
-    holdings_data = [
-        {
-            "symbol": h["tradingsymbol"],
-            "quantity": h["quantity"],
-            "average_price": h["average_price"],
-            "last_price": h["last_price"],
-            "pnl": h["pnl"],
-            "exchange": h["exchange"],
-        }
-        for h in holdings
-    ]
-    queue_data: dict = {
-        "data": holdings_data,
-        "pushed_at": datetime.now(
-            timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+    broker_service.set_access_token(data["access_token"])
+    holdings = broker_service.get_holdings()
+    print(f"[INFO] Retrieved holdings for user {user_id}: {holdings}")
+    protflio_service = PortfolioService(holdings, True)
+    data = {
+            "portfolio": {
+                "summary": protflio_service.get_summary(),
+                "top_holdings": protflio_service.get_top_holdings(),
+                "diversification_score": protflio_service.get_diversification_score(),
+                "worst_performing_stocks": protflio_service.get_worst_performer(),
+                "best_performing_stocks": protflio_service.get_best_performer(),
+                "stocks": protflio_service.get_stock_breakdown(),
+            }
+        }   
+    store_portfolio_analysis(data, user_id)
+    request_id = uuid.uuid4().hex
+    protfolio_analysis_queue_data = {
         "user_id": user_id,
-        "status": "pending",
+        "request_id": request_id,
+        "pushed_at": datetime.now(
+            timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),        
+        "protfolio": {
+            "summary": protflio_service.get_summary(),
+            "top_holdings": protflio_service.get_top_holdings(),
+            "diversificaiotn_score": protflio_service.get_diversification_score(),
+            "worst_performing_stocks": protflio_service.get_worst_performer(),
+            "best_performing_stocks": protflio_service.get_best_performer(),
+            "sector_allocation": protflio_service.get_sector_allocation()
+        }
     }
-    Container.get().get_portfolio_analysis_queue.push(queue_data)
-    return RedirectResponse(
-        url=f"finly://broker-sync?request_token={request_token}&status=success"
-    )
-
-    # return {
-    #     "status": "success",
-    #     "message": "Kite Connect login successful and portfolio analysis started.",
-    # }
+    Container.get().get_portfolio_analysis_queue.push(json.dumps(protfolio_analysis_queue_data))
+    return RedirectResponse(url=f"finly://broker-sync?request_token={request_token}&status=success") #TODO: Handle it for web use case also, current limited to mobile apps
+    return {
+        "status": "success",
+        "message": "Kite Connect login successful and portfolio analysis started.",
+    }
 
 
 @app.get("/broker/kite/holdings")

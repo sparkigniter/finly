@@ -1,12 +1,16 @@
 """This module defines the FinAdvisorAgent for protfolio analysis."""
 
+import os
+
+from google.auth import default
 from typing import Optional
 from google.adk import Agent
 from google.adk.tools import google_search_tool
-from app.ai.google_vertex.agents.finadvisory.config import FinAdvisorConfig
+from google.genai import Client
+from app.ai.google_vertex.agents.finadvisory.protfolio.config import FinAdvisorProtfolioConfig
 
 
-class FinAdvisorAgent:
+class FinAdvisorProtfolioAgent:
     """
     A specialized financial advisor agent designed to process Zerodha broker exports.
 
@@ -17,10 +21,10 @@ class FinAdvisorAgent:
     _model: str = "gemini-2.5-flash"
     _agent: Optional[Agent] = None
     _name: str = "financial_advisor_agent"
-    config: Optional[FinAdvisorConfig] = None
+    config: Optional[FinAdvisorProtfolioConfig] = None
 
-    def __init__(self, config: Optional[FinAdvisorConfig] = None):
-        self.config = config or FinAdvisorConfig()
+    def __init__(self, config: Optional[FinAdvisorProtfolioConfig] = None):
+        self.config = config or FinAdvisorProtfolioConfig()
         self._create_agent()
 
     def _create_agent(self) -> Agent:
@@ -35,6 +39,7 @@ class FinAdvisorAgent:
         Returns:
             Agent: A fully configured Google ADK Agent instance.
         """
+
         # Initialize market-grounding tools
         search_tool = google_search_tool.GoogleSearchTool()
 
@@ -46,12 +51,12 @@ class FinAdvisorAgent:
             static_instruction=self.config.instruction,
             generate_content_config=self.config.get_content_config(),
         )
-        FinAdvisorAgent._agent = agent
+        FinAdvisorProtfolioAgent._agent = agent
         return agent
 
     def agent(self) -> Agent:
         """Provides access to the Agent instance."""
-        return FinAdvisorAgent._agent
+        return FinAdvisorProtfolioAgent._agent
 
     def instruction(self, instruction: str):
         """Dynamically updates the agent's instruction."""

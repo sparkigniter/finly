@@ -14,7 +14,9 @@ from app.backend.services.queue.interfaces.queue_service import QueueService
 from app.backend.services.queue.google_pubsub.pubsub import PubSub
 from app.backend.services.queue.provider import QueueServiceProvider
 from app.backend.queues.protfolio_analyse import ProtfolioAnalyseQueue
+from app.backend.queues.stocks_analyse import StocksAnalyseQueue
 from app.backend.services.auth.provider import AuthServiceProvider
+from app.backend.queues.stocks_process import StockProcessQueue
 from app.backend.services.auth.google_firebase.auth import Auth
 from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
     FinAdvisorOrchestrator,
@@ -68,16 +70,27 @@ class Container:
         return AuthServiceProvider(self.get_firebase_auth)
 
     @cached_property
-    def get_finadvisory_orchestrator(self):
-        """Returns an instance of FinAdvisorOrchestrator."""
-        return FinAdvisorOrchestrator()
-
-    @cached_property
     def get_portfolio_analysis_queue(self) -> ProtfolioAnalyseQueue:
         """Returns an instance of Portfolio Analysis Queue."""
         return ProtfolioAnalyseQueue(
+            self.get_queue_service_provider, self.get_finadvisory_orchestrator, self.get_stocks_analysis_queue
+        )
+
+    @cached_property
+    def get_stocks_analysis_queue(self) -> StocksAnalyseQueue:
+        """Returns an instance of Stocks Analysis Queue."""
+        return StocksAnalyseQueue(
             self.get_queue_service_provider, self.get_finadvisory_orchestrator
         )
+    @cached_property
+    def get_stock_process_queue(self) -> StockProcessQueue:
+        """Returns an instance of Stocks Process Queue."""
+        return StockProcessQueue(self.get_queue_service, self.get_stocks_analysis_queue)
+    
+    @cached_property
+    def get_finadvisory_orchestrator(self):
+        """Returns an instance of FinAdvisorOrchestrator."""
+        return FinAdvisorOrchestrator()
 
     @cached_property
     def get_kite_client(self) -> KiteClient:
@@ -110,40 +123,24 @@ class Container:
         Expects FIREBASE_CERT env var to contain a JSON string with Firebase service account.
         Can also read from a local file at ./firebase-cert.json for local development.
         """
-        # Try to get Firebase cert from environment variable first
-        firebase_cert_json = os.environ.get("FIREBASE_CERT")
-
-        # Fallback to local file for development
-        if not firebase_cert_json:
-            local_cert_path = "./firebase-cert.json"
-            if os.path.exists(local_cert_path):
-                with open(local_cert_path, "r") as f:
-                    firebase_cert_json = f.read()
-                print(f"ℹ️  Loaded Firebase cert from {local_cert_path}")
+        
+        try: 
+            if os.getenv("env") == "development":
+                cert = os.getenv("FIREBASE_CERT_PATH")
             else:
-                raise ValueError(
-                    "FIREBASE_CERT environment variable not set and "
-                    "./firebase-cert.json not found. "
-                    "Please set FIREBASE_CERT env var or provide firebase-cert.json")
-
-        # Parse the JSON
-        try:
-            cert = json.loads(firebase_cert_json)
+                firebase_cert_json = os.environ.get("FIREBASE_CERT") or None
+                if not firebase_cert_json:
+                    raise ValueError("FIREBASE_CERT environment variable is not set.")
+                cert = json.loads(firebase_cert_json)
         except json.JSONDecodeError as e:
-            raise ValueError(
-                f"FIREBASE_CERT is not valid JSON: {e}\n"
-                f"Make sure the secret contains valid JSON without extra newlines.")
-
-        # Initialize Firebase only once
+            raise ValueError("Invalid Firebase certificate JSON: {}".format(e))
+        
         if not firebase_admin._apps:
             try:
                 cred = credentials.Certificate(cert)
                 firebase_admin.initialize_app(
                     cred, {"projectId": os.environ["FIREBASE_PROJECT_ID"]}
                 )
-                print("✅ Firebase initialized successfully")
+                print("Firebase initialized successfully")
             except Exception as e:
-                raise ValueError(
-                    f"Failed to initialize Firebase: {e}\n"
-                    f"Check that FIREBASE_PROJECT_ID is set correctly."
-                )
+                raise ValueError("Failed to initialize Firebase: {}".format(e))

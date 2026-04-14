@@ -2,7 +2,6 @@
 
 from typing import Optional
 from google.adk import Agent
-from app.ai.google_vertex.agents.formatter.schemas.response import PortfolioBreakdown
 from app.ai.google_vertex.agents.formatter.config import FormatterConfig
 
 
@@ -21,11 +20,11 @@ class FormatterAgent:
     _model: str = "gemini-2.5-flash"
     _name: str = "formatter_agent"
 
-    def __init__(self, config: Optional[FormatterConfig]):
+    def __init__(self, config: Optional[FormatterConfig], output_schema:any):
         self.config = config or FormatterConfig()
-        self._create_agent()
+        self._create_agent(output_schema)
 
-    def _create_agent(self) -> Agent:
+    def _create_agent(self, output_schema:any) -> Agent:
         """
         Initializes a fresh Agent instance with strict schema constraints.
 
@@ -43,7 +42,7 @@ class FormatterAgent:
             output_key="formatted_data",
             instruction=self.config.instruction,
             generate_content_config=self.config.get_content_config(),
-            output_schema=PortfolioBreakdown,
+            output_schema=output_schema,
         )
         FormatterAgent._agent = agent
         return agent
