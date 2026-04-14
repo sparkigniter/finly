@@ -20,11 +20,11 @@ class FormatterAgent:
     _model: str = "gemini-2.5-flash"
     _name: str = "formatter_agent"
 
-    def __init__(self, config: Optional[FormatterConfig], output_schema:any):
+    def __init__(self, config: Optional[FormatterConfig], output_schema: any):
         self.config = config or FormatterConfig()
         self._create_agent(output_schema)
 
-    def _create_agent(self, output_schema:any) -> Agent:
+    def _create_agent(self, output_schema: any) -> Agent:
         """
         Initializes a fresh Agent instance with strict schema constraints.
 
