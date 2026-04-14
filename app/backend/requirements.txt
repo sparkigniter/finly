@@ -136,3 +136,7 @@ tornado>=6.4.0
 kiteconnect>=4.9.3
 redis>=5.0.1
 aioredis>=2.0.1
+
+
+yfinance>=1.2.1
+
