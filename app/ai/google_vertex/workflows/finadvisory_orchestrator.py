@@ -1,7 +1,6 @@
 """This module defines the FinAdvisorAgent for portfolio analysis."""
 import json
 import asyncio
-import logging
 from datetime import datetime, timezone
 import re
 from google.adk.agents import SequentialAgent

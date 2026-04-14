@@ -177,19 +177,7 @@ async def kite_callback(request_token: str, user_id: str):
         }
     }
     Container.get().get_portfolio_analysis_queue.push(json.dumps(protfolio_analysis_queue_data))
-
-    # batch_size = 10
-    # for batch in range(0, len(holdings), batch_size):
-    #     stock_queue_data: dict = {
-    #         "stocks": protflio_service.get_stocks()[batch:batch + batch_size],
-    #         "pushed_at": datetime.now(
-    #             timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
-    #         "user_id": user_id,
-    #         "request_id": request_id,
-    #     }
-    #     Container.get().get_portfolio_analysis_queue.push(json.dumps(stock_queue_data))
-        #return RedirectResponse(url=f"finly://broker-sync?request_token={request_token}&status=success") #TODO: Handle it for web use case also, current limited to mobile apps
-
+    return RedirectResponse(url=f"finly://broker-sync?request_token={request_token}&status=success") #TODO: Handle it for web use case also, current limited to mobile apps
     return {
         "status": "success",
         "message": "Kite Connect login successful and portfolio analysis started.",

@@ -119,7 +119,7 @@ class Container:
 
     def init_firebase(self):
         """Initializes the Firebase app with the provided credentials and project ID.
-        
+
         Expects FIREBASE_CERT env var to contain a JSON string with Firebase service account.
         Can also read from a local file at ./firebase-cert.json for local development.
         """
