@@ -23,12 +23,11 @@ No more juggling between browser tabs, news sites, and your broker dashboard —
 ---
 
 ## 🖥️ Screenshots
+<img width="500" height="530" alt="screen_01" src="https://github.com/user-attachments/assets/bc0a7ed0-3822-4c86-9f5b-95cb943182f4" /> <img width="500" height="530" alt="Screenshot 2026-04-14 at 11 10 21 PM" src="https://github.com/user-attachments/assets/ee01d6f8-e9e9-49f9-bf9e-f69593626f72" />
 
-| Upload your portfolio | AI analysis & recommendations |
-|---|---|
-| ![Upload screen](https://github.com/sparkigniter/finly/raw/main/docs/upload.png) | ![Analysis screen](https://github.com/sparkigniter/finly/raw/main/docs/analysis.png) |
+<img width="500" height="530" alt="screen_03" src="https://github.com/user-attachments/assets/fb3ad282-8ddf-4aad-9fdd-95abfd7b05d6" /> <img width="500" height="530" alt="screen_04" src="https://github.com/user-attachments/assets/26caa577-ed20-4cf4-9027-cc5c8a9944a7" />
 
----
+
 
 ## 🚀 Getting Started
 
