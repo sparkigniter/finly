@@ -1,6 +1,5 @@
 """Module responsible for handling portfolio analysis tasks using a queue system."""
 
-import os
 import json
 from dotenv import load_dotenv
 from google.api_core import exceptions

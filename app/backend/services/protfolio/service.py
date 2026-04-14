@@ -11,10 +11,12 @@ logger = logging.getLogger(__name__)
 # CONSTANTS & ENUMS
 # ============================================================================
 
+
 class RiskLevel(str, Enum):
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
+
 
 UNKNOWN_SECTOR = "Unknown"
 DEFAULT_TOP_N = 5
@@ -24,11 +26,14 @@ DEFAULT_TOP_N = 5
 # EXCEPTIONS
 # ============================================================================
 
+
 class PortfolioError(Exception):
     pass
 
+
 class InvalidHoldingError(PortfolioError):
     pass
+
 
 class EmptyPortfolioError(PortfolioError):
     pass
@@ -38,8 +43,8 @@ class EmptyPortfolioError(PortfolioError):
 # SERVICE
 # ============================================================================
 
-class PortfolioService:
 
+class PortfolioService:
     def __init__(self, holdings: List[Dict[str, Any]], enrich: bool = True):
         if not holdings:
             raise EmptyPortfolioError("Portfolio data cannot be empty.")
@@ -60,7 +65,8 @@ class PortfolioService:
         for i, h in enumerate(holdings):
             missing = required - h.keys()
             if missing:
-                raise InvalidHoldingError(f"Holding {i} missing keys: {missing}")
+                raise InvalidHoldingError(
+                    f"Holding {i} missing keys: {missing}")
 
             for field in ["quantity", "average_price", "last_price"]:
                 if not isinstance(h[field], (int, float)) or h[field] < 0:
@@ -92,15 +98,17 @@ class PortfolioService:
             try:
                 yahoo = YahooFinance(self._to_yahoo_symbol(h))
 
-                h.update({
-                    "sector": h.get("sector") or yahoo.get_sector(),
-                    "industry": yahoo.industry(),
-                    "pe_ratio": yahoo.get_pe_ratio(),
-                    "market_cap": yahoo.get_market_cap(),
-                    "dividend_yield": yahoo.get_dividend_yield(),
-                    "debt_to_equity": yahoo.get_debt_to_equity(),
-                    "beta": yahoo.get_beta(),
-                })
+                h.update(
+                    {
+                        "sector": h.get("sector") or yahoo.get_sector(),
+                        "industry": yahoo.industry(),
+                        "pe_ratio": yahoo.get_pe_ratio(),
+                        "market_cap": yahoo.get_market_cap(),
+                        "dividend_yield": yahoo.get_dividend_yield(),
+                        "debt_to_equity": yahoo.get_debt_to_equity(),
+                        "beta": yahoo.get_beta(),
+                    }
+                )
 
             except Exception as e:
                 logger.warning(f"Failed to enrich {h['tradingsymbol']}: {e}")
@@ -124,7 +132,9 @@ class PortfolioService:
             "total_investment": round(total_inv, 2),
             "total_current_value": round(total_val, 2),
             "total_pnl": round(total_pnl, 2),
-            "overall_roi_pct": round((total_pnl / total_inv * 100), 2) if total_inv > 0 else 0,
+            "overall_roi_pct": round((total_pnl / total_inv * 100), 2)
+            if total_inv > 0
+            else 0,
             "holdings_count": len(self.holdings),
             "gainers_count": len(gainers),
             "win_rate": round(len(gainers) / len(self.holdings) * 100, 2),
@@ -137,7 +147,7 @@ class PortfolioService:
             {
                 "tradingsymbol": h["tradingsymbol"],
                 "roi": self._roi(h),
-                "value": round(self._value(h), 2)
+                "value": round(self._value(h), 2),
             }
             for h in sorted_h
         ]
@@ -184,11 +194,11 @@ class PortfolioService:
             val = allocation[sec]["value"]
             allocation[sec] = {
                 "value": round(val, 2),
-                "percentage": round(val / total * 100, 2) if total > 0 else 0
+                "percentage": round(val / total * 100, 2) if total > 0 else 0,
             }
 
         return allocation
-    
+
     def get_best_performer(self):
         if not self.holdings:
             return None
@@ -201,7 +211,6 @@ class PortfolioService:
             "pnl": round(self._pnl(best), 2),
             "current_value": round(self._value(best), 2),
         }
-
 
     def get_worst_performer(self):
         if not self.holdings:

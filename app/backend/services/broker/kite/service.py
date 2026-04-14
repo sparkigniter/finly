@@ -18,11 +18,9 @@ class KiteBrokerService:
             return holdings
         except Exception as e:
             raise Exception(f"Failed to fetch holdings: {str(e)}") from e
-        
+
     def set_access_token(self, access_token: str):
         self.access_token = access_token
-    
+
     def get_access_token(self) -> str:
         return self.access_token
-    
-

@@ -3,7 +3,9 @@
 from vertexai import agent_engines
 from vertexai.preview.reasoning_engines import AdkApp
 
-from app.ai.google_vertex.workflows.finadvisory_orchestrator import FinAdvisorOrchestrator
+from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
+    FinAdvisorOrchestrator,
+)
 from app.ai.google_vertex.clients.vertext_client import VertexClient
 
 
