@@ -1,0 +1,93 @@
+# Dependabot Configuration - Production Environment
+# Architecture: Monorepo-style structure under /app/
+# Expert: Senior DevOps & Infrastructure Engineer
+
+version: 2
+updates:
+
+  # 1. Backend Dependencies (Python)
+  # Monitoring: /app/backend/requirements.txt or pyproject.toml
+  - package-ecosystem: "pip"
+    directory: "/app/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "UTC"
+    reviewers:
+      - "sparkigniter"
+    labels:
+      - "dependencies"
+      - "python"
+      - "backend"
+    commit-message:
+      prefix: "chore(deps-backend)"
+    groups:
+      python-group:
+        patterns: ["*"] # Consolidates all backend updates into a single PR
+    allow:
+      - dependency-type: "direct"
+    open-pull-requests-limit: 3
+
+  # 2. Frontend Dependencies (React/NPM)
+  # Monitoring: /app/frontend/package.json
+  - package-ecosystem: "npm"
+    directory: "/app/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:30"
+      timezone: "UTC"
+    reviewers:
+      - "sparkigniter"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "frontend"
+    commit-message:
+      prefix: "chore(deps-frontend)"
+    groups:
+      frontend-group:
+        patterns: ["*"] # Prevents CI bottleneck by grouping UI updates
+    allow:
+      - dependency-type: "direct"
+    open-pull-requests-limit: 3
+
+  # 3. Container Security (Docker)
+  # Scans Dockerfiles in both /app/backend and /app/frontend
+  - package-ecosystem: "docker"
+    directory: "/app/backend"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "sparkigniter"
+    labels:
+      - "security"
+      - "docker"
+    commit-message:
+      prefix: "ops(docker-backend)"
+
+  - package-ecosystem: "docker"
+    directory: "/app/frontend"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "sparkigniter"
+    labels:
+      - "security"
+      - "docker"
+    commit-message:
+      prefix: "ops(docker-frontend)"
+
+  # 4. CI/CD Pipeline Security (GitHub Actions)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "sparkigniter"
+    labels:
+      - "ci"
+    commit-message:
+      prefix: "ci(deps)"
+    open-pull-requests-limit: 2
