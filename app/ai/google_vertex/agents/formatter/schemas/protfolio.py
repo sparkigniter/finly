@@ -1,6 +1,5 @@
 """Schema definitions for protfolio."""
 from pydantic import BaseModel, Field
-from typing import List, Optional
 
 
 class PortfolioInsights(BaseModel):

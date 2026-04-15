@@ -73,7 +73,9 @@ class Container:
     def get_portfolio_analysis_queue(self) -> ProtfolioAnalyseQueue:
         """Returns an instance of Portfolio Analysis Queue."""
         return ProtfolioAnalyseQueue(
-            self.get_queue_service_provider, self.get_finadvisory_orchestrator, self.get_stocks_analysis_queue
+            self.get_queue_service_provider,
+            self.get_finadvisory_orchestrator,
+            self.get_stocks_analysis_queue,
         )
 
     @cached_property
@@ -82,11 +84,14 @@ class Container:
         return StocksAnalyseQueue(
             self.get_queue_service_provider, self.get_finadvisory_orchestrator
         )
+
     @cached_property
     def get_stock_process_queue(self) -> StockProcessQueue:
         """Returns an instance of Stocks Process Queue."""
-        return StockProcessQueue(self.get_queue_service, self.get_stocks_analysis_queue)
-    
+        return StockProcessQueue(
+            self.get_queue_service,
+            self.get_stocks_analysis_queue)
+
     @cached_property
     def get_finadvisory_orchestrator(self):
         """Returns an instance of FinAdvisorOrchestrator."""
@@ -119,22 +124,23 @@ class Container:
 
     def init_firebase(self):
         """Initializes the Firebase app with the provided credentials and project ID.
-        
+
         Expects FIREBASE_CERT env var to contain a JSON string with Firebase service account.
         Can also read from a local file at ./firebase-cert.json for local development.
         """
-        
-        try: 
+
+        try:
             if os.getenv("env") == "development":
                 cert = os.getenv("FIREBASE_CERT_PATH")
             else:
                 firebase_cert_json = os.environ.get("FIREBASE_CERT") or None
                 if not firebase_cert_json:
-                    raise ValueError("FIREBASE_CERT environment variable is not set.")
+                    raise ValueError(
+                        "FIREBASE_CERT environment variable is not set.")
                 cert = json.loads(firebase_cert_json)
         except json.JSONDecodeError as e:
             raise ValueError("Invalid Firebase certificate JSON: {}".format(e))
-        
+
         if not firebase_admin._apps:
             try:
                 cred = credentials.Certificate(cert)

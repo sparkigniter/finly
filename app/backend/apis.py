@@ -8,7 +8,10 @@ from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
-from app.ai.google_vertex.agents.tools.firestore_datastore import get_latest_analysis, store_portfolio_analysis
+from app.ai.google_vertex.agents.tools.firestore_datastore import (
+    get_latest_analysis,
+    store_portfolio_analysis,
+)
 from app.backend.services.container import Container
 from app.backend.dtos.create_user import UserCreateDto
 from app.backend.dtos.login import LoginDto
@@ -151,45 +154,36 @@ async def kite_callback(request_token: str, user_id: str):
     print(f"[INFO] Retrieved holdings for user {user_id}: {holdings}")
     protflio_service = PortfolioService(holdings, True)
     data = {
-            "portfolio": {
-                "summary": protflio_service.get_summary(),
-                "top_holdings": protflio_service.get_top_holdings(),
-                "diversification_score": protflio_service.get_diversification_score(),
-                "worst_performing_stocks": protflio_service.get_worst_performer(),
-                "best_performing_stocks": protflio_service.get_best_performer(),
-                "stocks": protflio_service.get_stock_breakdown(),
-            }
-        }   
+        "portfolio": {
+            "summary": protflio_service.get_summary(),
+            "top_holdings": protflio_service.get_top_holdings(),
+            "diversification_score": protflio_service.get_diversification_score(),
+            "worst_performing_stocks": protflio_service.get_worst_performer(),
+            "best_performing_stocks": protflio_service.get_best_performer(),
+            "stocks": protflio_service.get_stock_breakdown(),
+        }}
     store_portfolio_analysis(data, user_id)
     request_id = uuid.uuid4().hex
     protfolio_analysis_queue_data = {
         "user_id": user_id,
         "request_id": request_id,
         "pushed_at": datetime.now(
-            timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),        
+            timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
         "protfolio": {
             "summary": protflio_service.get_summary(),
             "top_holdings": protflio_service.get_top_holdings(),
             "diversificaiotn_score": protflio_service.get_diversification_score(),
             "worst_performing_stocks": protflio_service.get_worst_performer(),
             "best_performing_stocks": protflio_service.get_best_performer(),
-            "sector_allocation": protflio_service.get_sector_allocation()
-        }
+            "sector_allocation": protflio_service.get_sector_allocation(),
+        },
     }
-    Container.get().get_portfolio_analysis_queue.push(json.dumps(protfolio_analysis_queue_data))
-
-    # batch_size = 10
-    # for batch in range(0, len(holdings), batch_size):
-    #     stock_queue_data: dict = {
-    #         "stocks": protflio_service.get_stocks()[batch:batch + batch_size],
-    #         "pushed_at": datetime.now(
-    #             timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
-    #         "user_id": user_id,
-    #         "request_id": request_id,
-    #     }
-    #     Container.get().get_portfolio_analysis_queue.push(json.dumps(stock_queue_data))
-        #return RedirectResponse(url=f"finly://broker-sync?request_token={request_token}&status=success") #TODO: Handle it for web use case also, current limited to mobile apps
-
+    Container.get().get_portfolio_analysis_queue.push(
+        json.dumps(protfolio_analysis_queue_data)
+    )
+    return RedirectResponse(
+        url=f"finly://broker-sync?request_token={request_token}&status=success"
+    )  # TODO: Handle it for web use case also, current limited to mobile apps
     return {
         "status": "success",
         "message": "Kite Connect login successful and portfolio analysis started.",

@@ -20,13 +20,12 @@ class FormatterConfig:
         "Ensure correct data types (int, float, string, null).\n"
         "If any value is missing, use defaults:\n"
         "- numbers: 0\n"
-        "- strings: \"\"\n"
+        '- strings: ""\n'
         "- lists: []\n"
         "- optional fields: null\n"
         "recommendation must be one of: BUY, HOLD, SELL, STRONG_BUY.\n"
         "Do NOT hallucinate unknown fields or values.\n"
-        "Ensure JSON is valid and parsable (no trailing commas)."
-    )
+        "Ensure JSON is valid and parsable (no trailing commas).")
 
     def get_content_config(self) -> types.GenerateContentConfig:
         """Returns the content generation configuration for the agent."""

@@ -23,18 +23,21 @@ class VertexClient:
         location = os.getenv("REGION", "asia-south1")
 
         staging_bucket = os.getenv("STAGING_BUCKET")
-        
+
         if not staging_bucket:
             # Fallback to the known bucket if env is missing to prevent crash
             staging_bucket = "gs://finly-staging-bucket"
-            print(f"⚠️ Warning: STAGING_BUCKET env var not found. Falling back to: {staging_bucket}")
+            print(
+                f"⚠️ Warning: STAGING_BUCKET env var not found. Falling back to: {staging_bucket}"
+            )
 
         # Force the SDK to find your local gcloud credentials
         credentials, _ = default()
-        
-        print(f"🛠️ Initializing Vertex AI for Project: {project_id} in {location}")
+
+        print(
+            f"🛠️ Initializing Vertex AI for Project: {project_id} in {location}")
         print(f"📦 Staging Bucket: {staging_bucket}")
-        
+
         vertexai.init(
             project=project_id,
             location=location,

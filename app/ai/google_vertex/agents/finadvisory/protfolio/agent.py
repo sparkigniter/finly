@@ -1,13 +1,11 @@
 """This module defines the FinAdvisorAgent for protfolio analysis."""
 
-import os
-
-from google.auth import default
 from typing import Optional
 from google.adk import Agent
 from google.adk.tools import google_search_tool
-from google.genai import Client
-from app.ai.google_vertex.agents.finadvisory.protfolio.config import FinAdvisorProtfolioConfig
+from app.ai.google_vertex.agents.finadvisory.protfolio.config import (
+    FinAdvisorProtfolioConfig,
+)
 
 
 class FinAdvisorProtfolioAgent:

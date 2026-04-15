@@ -25,7 +25,7 @@ class FormatterAgent:
         self.config = config or FormatterConfig()
         self._create_agent(output_schema)
 
-    def _create_agent(self, output_schema:any) -> Agent:
+    def _create_agent(self, output_schema: any) -> Agent:
         """
         Initializes a fresh Agent instance with strict schema constraints.
 

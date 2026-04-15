@@ -1,6 +1,5 @@
 """Module responsible for handling portfolio analysis tasks using a queue system."""
 
-import os
 import json
 from dotenv import load_dotenv
 from datetime import datetime, timezone
@@ -15,7 +14,6 @@ from app.ai.google_vertex.workflows.finadvisory_orchestrator import (
 from app.ai.google_vertex.agents.tools.firestore_datastore import get_stocks
 
 from app.backend.queues.stocks_analyse import StocksAnalyseQueue
-from app.backend.queues.stocks_process import StockProcessQueue
 
 
 load_dotenv()
@@ -30,7 +28,7 @@ class ProtfolioAnalyseQueue:
         self,
         queue_service_provider: QueueServiceProvider,
         orchestrator: FinAdvisorOrchestrator,
-        stock_analysis_queue: StocksAnalyseQueue
+        stock_analysis_queue: StocksAnalyseQueue,
     ):
         """Initializes a new instance of the class."""
         self.__queue_service_provider__ = queue_service_provider
@@ -60,13 +58,16 @@ class ProtfolioAnalyseQueue:
                 batch_size = 10
                 for batch in range(0, len(stocks), batch_size):
                     stocks_queue_data = {
-                        "stocks": stocks[batch:batch + batch_size],
-                        "pushed_at": datetime.now(
-                            timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+                        "stocks": stocks[batch: batch + batch_size],
+                        "pushed_at": datetime.now(timezone.utc).strftime(
+                            "%Y-%m-%d %H:%M:%S UTC"
+                        ),
                         "user_id": data["user_id"],
-                        "request_id": data["request_id"]
+                        "request_id": data["request_id"],
                     }
-                    self.stock_analysis_queue.push(json.dumps(stocks_queue_data)) #push the stocks to process 
+                    self.stock_analysis_queue.push(
+                        json.dumps(stocks_queue_data)
+                    )  # push the stocks to process
         except exceptions.DeadlineExceeded:
             return None
         return message
