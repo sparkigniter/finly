@@ -100,4 +100,3 @@ class Token:
         return {
             "tokenString": self.token_string,
             "expires_at": self.get_expiry()}
-

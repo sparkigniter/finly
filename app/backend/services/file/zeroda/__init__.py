@@ -1,2 +1,1 @@
 """Initialization module for zeroda."""
-

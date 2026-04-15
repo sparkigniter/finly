@@ -1,4 +1,5 @@
 """Module providing service functionality."""
+
 from app.backend.services.broker.kite.client import KiteClient
 from app.backend.services.cache.provider import CacheProvider
 
@@ -28,6 +29,3 @@ class KiteBrokerService:
     def get_access_token(self) -> str:
         """Retrieves the access token."""
         return self.access_token
-    
-
-

@@ -1,2 +1,1 @@
 """Module providing provider functionality."""
-

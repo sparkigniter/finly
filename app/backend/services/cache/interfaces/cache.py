@@ -1,4 +1,5 @@
 """Module providing cache functionality."""
+
 from typing import Protocol
 
 
@@ -23,4 +24,3 @@ class Cache(Protocol):
     def flushdb(self) -> None:
         """Flush the current database in the cache."""
         pass
-

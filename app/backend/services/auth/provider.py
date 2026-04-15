@@ -36,4 +36,3 @@ class AuthServiceProvider:
         """
         # Implementation for extracting user ID
         return self.auth_service.get_user_id(token)
-

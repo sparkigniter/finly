@@ -1,9 +1,11 @@
 """Module providing user functionality."""
+
 from typing import Protocol
 
 
 class User(Protocol):
     """User class implementation."""
+
     user_id: str
     email: str
     display_name: str
@@ -35,4 +37,3 @@ class User(Protocol):
     def get_refresh_token(self) -> str:
         """Retrieves the refresh token."""
         pass
-

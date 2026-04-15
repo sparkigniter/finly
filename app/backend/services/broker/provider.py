@@ -1,4 +1,5 @@
 """Module providing provider functionality."""
+
 from app.backend.services.broker.interfaces.broker_service import BrokerService
 
 
@@ -20,5 +21,3 @@ class BrokerServiceProvider:
     def get_access_token(self) -> str:
         """Retrieves the access token."""
         return self.service.get_access_token()
-        
-

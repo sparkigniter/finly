@@ -1,14 +1,15 @@
 """Module providing finance functionality."""
+
 import yfinance as yf
 from yfinance import Ticker
 
 
 class YahooFinance:
-
     """YahooFinance class implementation."""
+
     def __init__(self, ticker: str):
         """Initializes a new instance of the class."""
-        self.ticker: Ticker =  yf.Ticker(ticker)
+        self.ticker: Ticker = yf.Ticker(ticker)
         print("yfinance info {self.ticker_info}")
 
     def get_sector(self):
@@ -33,8 +34,8 @@ class YahooFinance:
 
     def get_enterprise_value(self):
         """Retrieves the enterprise value."""
-        return self.ticker.info.get("enterpriseValue")  
-    
+        return self.ticker.info.get("enterpriseValue")
+
     def get_enterprise_to_ebitda(self):
         """Retrieves the enterprise to ebitda."""
         return self.ticker.info.get("enterpriseToEbitda")
@@ -53,8 +54,8 @@ class YahooFinance:
 
     def industry(self):
         """Performs the industry operation."""
-        return self.ticker.info.get("industry") 
-    
+        return self.ticker.info.get("industry")
+
     def get_beta(self):
         """Retrieves the beta."""
         return self.ticker.info.get("beta")
@@ -85,7 +86,4 @@ class YahooFinance:
 
     def get_total_cash(self):
         """Retrieves the total cash."""
-        return self.ticker.info.get("totalCash")  
-
-
-        
+        return self.ticker.info.get("totalCash")
