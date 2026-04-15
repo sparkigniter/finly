@@ -9,6 +9,7 @@ class RedisClient:
     """A simple Redis client wrapper to manage Redis connections and operations."""
 
     def __init__(self, host: str = "localhost", port: int = 6379, db: int = 0):
+        """Initializes a new instance of the class."""
         self.client = redis.Redis(
             host=os.environ["REDIS_HOST"],
             port=int(os.environ["REDIS_PORT"]),
@@ -35,3 +36,4 @@ class RedisClient:
     def flushdb(self) -> bool:
         """Flush the current database in Redis."""
         return self.client.flushdb()
+

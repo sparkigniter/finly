@@ -1,3 +1,4 @@
+"""Module providing service functionality."""
 from typing import List, Dict, Any
 from enum import Enum
 import logging
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 
 class RiskLevel(str, Enum):
+    """RiskLevel class implementation."""
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
@@ -25,12 +27,15 @@ DEFAULT_TOP_N = 5
 # ============================================================================
 
 class PortfolioError(Exception):
+    """PortfolioError class implementation."""
     pass
 
 class InvalidHoldingError(PortfolioError):
+    """InvalidHoldingError class implementation."""
     pass
 
 class EmptyPortfolioError(PortfolioError):
+    """EmptyPortfolioError class implementation."""
     pass
 
 
@@ -40,7 +45,9 @@ class EmptyPortfolioError(PortfolioError):
 
 class PortfolioService:
 
+    """PortfolioService class implementation."""
     def __init__(self, holdings: List[Dict[str, Any]], enrich: bool = True):
+        """Initializes a new instance of the class."""
         if not holdings:
             raise EmptyPortfolioError("Portfolio data cannot be empty.")
 
@@ -55,6 +62,7 @@ class PortfolioService:
     # ========================================================================
 
     def _validate_holdings(self, holdings):
+        """Performs the validate holdings operation."""
         required = {"tradingsymbol", "quantity", "average_price", "last_price"}
 
         for i, h in enumerate(holdings):
@@ -71,15 +79,19 @@ class PortfolioService:
     # ========================================================================
 
     def _pnl(self, h):
+        """Performs the pnl operation."""
         return (h["last_price"] - h["average_price"]) * h["quantity"]
 
     def _value(self, h):
+        """Performs the value operation."""
         return h["last_price"] * h["quantity"]
 
     def _cost(self, h):
+        """Performs the cost operation."""
         return h["average_price"] * h["quantity"]
 
     def _roi(self, h):
+        """Performs the roi operation."""
         cost = self._cost(h)
         return round((self._pnl(h) / cost) * 100, 2) if cost > 0 else 0.0
 
@@ -88,6 +100,7 @@ class PortfolioService:
     # ========================================================================
 
     def _enrich_holdings(self):
+        """Performs the enrich holdings operation."""
         for h in self.holdings:
             try:
                 yahoo = YahooFinance(self._to_yahoo_symbol(h))
@@ -106,6 +119,7 @@ class PortfolioService:
                 logger.warning(f"Failed to enrich {h['tradingsymbol']}: {e}")
 
     def _to_yahoo_symbol(self, h):
+        """Performs the to yahoo symbol operation."""
         suffix = "BO" if h.get("exchange") == "BSE" else "NS"
         return f"{h['tradingsymbol']}.{suffix}"
 
@@ -114,6 +128,7 @@ class PortfolioService:
     # ========================================================================
 
     def get_summary(self):
+        """Retrieves the summary."""
         total_inv = sum(self._cost(h) for h in self.holdings)
         total_val = sum(self._value(h) for h in self.holdings)
         total_pnl = total_val - total_inv
@@ -131,6 +146,7 @@ class PortfolioService:
         }
 
     def get_top_holdings(self, n=DEFAULT_TOP_N):
+        """Retrieves the top holdings."""
         sorted_h = sorted(self.holdings, key=self._value, reverse=True)[:n]
 
         return [
@@ -143,6 +159,7 @@ class PortfolioService:
         ]
 
     def get_stock_breakdown(self):
+        """Retrieves the stock breakdown."""
         return [
             {
                 "tradingsymbol": h["tradingsymbol"],
@@ -157,6 +174,7 @@ class PortfolioService:
         ]
 
     def get_diversification_score(self):
+        """Retrieves the diversification score."""
         total = sum(self._value(h) for h in self.holdings)
         if total <= 0:
             return 0.0
@@ -170,6 +188,7 @@ class PortfolioService:
         return round(((1 - hhi) / (1 - (1 / n))) * 100, 2)
 
     def get_sector_allocation(self):
+        """Retrieves the sector allocation."""
         total = sum(self._value(h) for h in self.holdings)
         allocation = {}
 
@@ -190,6 +209,7 @@ class PortfolioService:
         return allocation
     
     def get_best_performer(self):
+        """Retrieves the best performer."""
         if not self.holdings:
             return None
 
@@ -204,6 +224,7 @@ class PortfolioService:
 
 
     def get_worst_performer(self):
+        """Retrieves the worst performer."""
         if not self.holdings:
             return None
 

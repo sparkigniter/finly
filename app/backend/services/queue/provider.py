@@ -9,6 +9,7 @@ class QueueServiceProvider:
     __client = None
 
     def __init__(self, client: QueueService):
+        """Initializes a new instance of the class."""
         self.__client = client
 
     def push(self, queue: str, data: dict):
@@ -22,3 +23,4 @@ class QueueServiceProvider:
     def acknowledge(self, message_id: str, queue: str):
         """Acknowledges a message to prevent it from being redelivered."""
         self.__client.acknowledge(message_id=message_id, queue=queue)
+

@@ -25,6 +25,7 @@ class StockProcessQueue:
         queue_service_provider: QueueServiceProvider,
         stock_analyse_queue: StocksAnalyseQueue
     ):
+        """Initializes a new instance of the class."""
         self.__queue_service_provider__ = queue_service_provider
         self.stock_analyse_queue = stock_analyse_queue
     
@@ -56,3 +57,4 @@ class StockProcessQueue:
         except exceptions.DeadlineExceeded:
             return None
         return message
+

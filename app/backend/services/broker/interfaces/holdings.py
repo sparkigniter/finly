@@ -1,3 +1,4 @@
+"""Module providing holdings functionality."""
 from dataclasses import dataclass
 
 
@@ -11,3 +12,4 @@ class Holdings:
     last_price: float
     pnl: float
     exchange: str
+

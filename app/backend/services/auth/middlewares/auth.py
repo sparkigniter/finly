@@ -1,3 +1,4 @@
+"""Module providing auth functionality."""
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.backend.services.auth.token import Token
@@ -24,3 +25,4 @@ async def verify_token(
         )
 
     return Token(token_string=token_string)
+

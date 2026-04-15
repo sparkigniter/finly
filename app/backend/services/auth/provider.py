@@ -10,6 +10,7 @@ class AuthServiceProvider:
     """
 
     def __init__(self, auth_service: AuthService):
+        """Initializes a new instance of the class."""
         self.auth_service = auth_service
 
     def register_user(self, email: str, password: str) -> UserInterface:
@@ -35,3 +36,4 @@ class AuthServiceProvider:
         """
         # Implementation for extracting user ID
         return self.auth_service.get_user_id(token)
+

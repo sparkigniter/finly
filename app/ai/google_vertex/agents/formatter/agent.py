@@ -21,6 +21,7 @@ class FormatterAgent:
     _name: str = "formatter_agent"
 
     def __init__(self, config: Optional[FormatterConfig], output_schema:any):
+        """Initializes a new instance of the class."""
         self.config = config or FormatterConfig()
         self._create_agent(output_schema)
 
@@ -50,3 +51,4 @@ class FormatterAgent:
     def agent(self) -> Agent:
         """Provides access to the Agent instance."""
         return FormatterAgent._agent
+

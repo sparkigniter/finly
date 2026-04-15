@@ -21,6 +21,7 @@ class StocksAnalyseQueue:
         queue_service_provider: QueueServiceProvider,
         orchestrator: any,
     ):
+        """Initializes a new instance of the class."""
         self.__queue_service_provider__ = queue_service_provider
         self.__orchestrator__ = orchestrator
 
@@ -46,3 +47,4 @@ class StocksAnalyseQueue:
         except exceptions.DeadlineExceeded:
             return None
         return message
+

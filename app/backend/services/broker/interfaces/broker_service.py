@@ -1,3 +1,4 @@
+"""Module providing broker_service functionality."""
 from typing import Protocol
 from app.backend.services.broker.interfaces.holdings import Holdings
 
@@ -8,3 +9,4 @@ class BrokerService(Protocol):
     def get_holdings(self) -> list[Holdings]:
         """Fetch the user's holdings from the broker."""
         pass
+
