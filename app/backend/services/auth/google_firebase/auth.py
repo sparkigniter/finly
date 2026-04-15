@@ -13,8 +13,7 @@ class Auth:
     """Authentication class responsible for handling user registration, authentication, and token verification using Firebase."""
 
     def __init__(self):
-        # API Key is used for the client-side 'signInWithPassword' REST
-        # fallback
+        """Initializes a new instance of the class."""
         self.api_key = os.getenv("FIREBASE_API_KEY")
         self.auth_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={self.api_key}"
 

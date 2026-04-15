@@ -1,9 +1,11 @@
+"""Schema definitions for stock."""
 from enum import Enum
 from typing import Optional
 from pydantic import BaseModel, Field
 
 
 class Recommendation(str, Enum):
+    """Recommendation class implementation."""
     BUY = "BUY"
     HOLD = "HOLD"
     SELL = "SELL"
@@ -11,12 +13,14 @@ class Recommendation(str, Enum):
 
 
 class MarketCap(str, Enum):
+    """MarketCap class implementation."""
     LARGE = "Large Cap"
     MID = "Mid Cap"
     SMALL = "Small Cap"
 
 
 class StockInsight(BaseModel):
+    """StockInsight class implementation."""
     reason: str
     risks: list[str] = []
     opportunities: list[str] = []
@@ -24,6 +28,7 @@ class StockInsight(BaseModel):
 
 
 class Stock(BaseModel):
+    """Stock class implementation."""
     tradingsymbol: str
     recommendation: Recommendation
 
@@ -40,4 +45,5 @@ class Stock(BaseModel):
 
 
 class StockAnalysisResponse(BaseModel):
+    """StockAnalysisResponse class implementation."""
     stocks: list[Stock]

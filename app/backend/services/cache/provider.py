@@ -1,3 +1,4 @@
+"""Module providing provider functionality."""
 from app.backend.services.cache.interfaces.cache import Cache
 
 
@@ -5,6 +6,7 @@ class CacheProvider:
     """Provider for cache services."""
 
     def __init__(self, client: Cache):
+        """Initializes a new instance of the class."""
         self.client = client
 
     def set(self, key: str, value: str, expire: int = None):
@@ -26,3 +28,4 @@ class CacheProvider:
     def flushdb(self):
         """Flush the current database in the cache."""
         self.client.flushdb()
+

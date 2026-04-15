@@ -30,6 +30,7 @@ class ProtfolioAnalyseQueue:
         orchestrator: FinAdvisorOrchestrator,
         stock_analysis_queue: StocksAnalyseQueue,
     ):
+        """Initializes a new instance of the class."""
         self.__queue_service_provider__ = queue_service_provider
         self.__orchestrator__ = orchestrator
         self.stock_analysis_queue = stock_analysis_queue
@@ -70,3 +71,4 @@ class ProtfolioAnalyseQueue:
         except exceptions.DeadlineExceeded:
             return None
         return message
+

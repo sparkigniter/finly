@@ -7,6 +7,7 @@ class Token:
     """A simple wrapper around JWT tokens to provide easy access to claims and metadata."""
 
     def __init__(self, token_string: str):
+        """Initializes a new instance of the class."""
         self.token_string = token_string
         self.decoded_token = self.decode()
 
@@ -60,9 +61,11 @@ class Token:
             return {}
 
     def get_algorithm(self) -> str:
+        """Retrieves the algorithm."""
         return self.get_header().get("alg")
 
     def get_key_id(self) -> str:
+        """Retrieves the key id."""
         return self.get_header().get("kid")
 
     # --- CUSTOM CLAIMS HELPERS ---
@@ -97,3 +100,4 @@ class Token:
         return {
             "tokenString": self.token_string,
             "expires_at": self.get_expiry()}
+

@@ -20,6 +20,7 @@ class FinAdvisorStocksAgent:
     config: Optional[FinAdvisorStocksConfig] = None
 
     def __init__(self, config: Optional[FinAdvisorStocksConfig] = None):
+        """Initializes a new instance of the class."""
         self.config = config or FinAdvisorStocksConfig()
         self._create_agent()
 
@@ -61,3 +62,4 @@ class FinAdvisorStocksAgent:
     def update_model(self, model: str):
         """Dynamically updates the agent's model."""
         self._agent.model = model
+

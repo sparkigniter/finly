@@ -25,6 +25,7 @@ class DataStoreAgent:
     config: Optional[DataStoreConfig] = None
 
     def __init__(self, config: Optional[DataStoreConfig]):
+        """Initializes a new instance of the class."""
         self.config = config or DataStoreConfig()
         self._create_agent()
 
@@ -55,3 +56,4 @@ class DataStoreAgent:
     def agent(self) -> Agent:
         """Provides access to the Agent instance."""
         return DataStoreAgent._agent
+

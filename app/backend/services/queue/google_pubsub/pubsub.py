@@ -1,3 +1,4 @@
+"""Module providing pubsub functionality."""
 from google.cloud import pubsub_v1
 import json
 from typing import Optional, Any
@@ -5,29 +6,34 @@ from google.api_core import exceptions
 
 
 class PubSub:
+    """PubSub class implementation."""
     def __init__(
         self,
         project_id: str,
         topic_id: Optional[str] = None,
         subscription_id: Optional[str] = None,
     ):
+        """Initializes a new instance of the class."""
         self.project_id = project_id
         self.subscription_id = subscription_id
         self.publisher = pubsub_v1.PublisherClient()
         self.subscriber = pubsub_v1.SubscriberClient()
 
     def _get_publisher_topic_path(self, queue: str) -> str:
+        """Retrieves the publisher topic path for the given queue."""
         tid = queue
         if not tid:
             raise ValueError("Topic ID is required.")
         return self.publisher.topic_path(self.project_id, tid)
 
     def _get_subscription_topic_path(self, queue: str) -> str:
+        """Retrieves the subscription topic path for the given queue."""
         if not queue:
             raise ValueError("Subscription ID is required.")
         return self.subscriber.subscription_path(self.project_id, queue)
 
     def __create_topic__(self, queue: str) -> None:
+        """Creates the topic."""
         try:
             topic_path = self._get_publisher_topic_path(queue)
             self.publisher.create_topic(request={"name": topic_path})
@@ -37,6 +43,7 @@ class PubSub:
             raise e
 
     def __create_subscription__(self, queue: str) -> None:
+        """Creates the subscription."""
         try:
             topic_path = self._get_publisher_topic_path(queue)
             subscription_path = self._get_subscription_topic_path(queue)
@@ -52,6 +59,7 @@ class PubSub:
             raise e
 
     def __create_queue__(self, queue: str) -> None:
+        """Creates the queue."""
         try:
             self.__create_topic__(queue)
             self.__create_subscription__(queue)
@@ -61,6 +69,7 @@ class PubSub:
             raise e
 
     def push(self, data: Any, queue: str) -> str:
+        """Pushes the message data to the queue."""
         self.__create_queue__(queue)
         topic_path = self._get_publisher_topic_path(queue)
         if not isinstance(data, (str, bytes)):
@@ -71,6 +80,7 @@ class PubSub:
         return future.result()
 
     def pull(self, queue: str):
+        """Pulls the message data from the queue."""
         subscription_path = self._get_subscription_topic_path(queue)
         data = self.subscriber.pull(
             request={
@@ -81,9 +91,11 @@ class PubSub:
         return data
 
     def acknowledge(self, message_id: str, queue: str):
+        """Acknowledges the processing of a message."""
         self.subscriber.acknowledge(
             request={
                 "subscription": self._get_subscription_topic_path(queue),
                 "ack_ids": [message_id],
             }
         )
+

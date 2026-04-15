@@ -36,12 +36,8 @@ def update_portfolio_transaction(transaction, user_id, analysis_data):
 
 
 @firestore.transactional
-def patch_portfolio_transaction(
-    transaction,
-    doc_ref,
-    stock_insights: list[dict] | None,
-    protfolio_insights: dict | None,
-):
+def patch_portfolio_transaction(transaction, doc_ref, stock_insights: list[dict] | None, protfolio_insights: dict | None):
+    """Updates the transaction in Firestore with analyzed insights."""
     snapshot = doc_ref.get(transaction=transaction)
     if not snapshot.exists:
         raise Exception("Document not found")
@@ -172,8 +168,8 @@ def get_stocks(user_id: str) -> dict:
         )
     return []
 
-
-def get_sector(symbol: str) -> str:
+def get_sector(symbol: str) -> str: 
+    """Retrieves the sector."""
     collection_ref = db.collection("stock_details")
     query = collection_ref.where("tradingsymbol", "==", symbol)
     results = query.get()
@@ -183,6 +179,7 @@ def get_sector(symbol: str) -> str:
 
 
 def add_to_stock_details(tradingsymbol: str, data: dict):
+    """Saves stock details into the standard datastore."""
     collection_ref = db.collection("stock_details")
     query = collection_ref.where("tradingsymbol", "==", tradingsymbol)
     results = query.get()
@@ -190,3 +187,5 @@ def add_to_stock_details(tradingsymbol: str, data: dict):
         return False
     results.append(data)
     return True
+
+
