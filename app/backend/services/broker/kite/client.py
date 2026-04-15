@@ -1,4 +1,5 @@
 """Module providing client functionality."""
+
 import os
 from kiteconnect import KiteConnect
 
@@ -15,4 +16,3 @@ class KiteClient:
         """Retrieves the client."""
         kite = KiteConnect(api_key=self.__api_key)
         return kite
-

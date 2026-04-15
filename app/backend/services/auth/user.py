@@ -1,6 +1,9 @@
 """Module providing user functionality."""
+
+
 class User:
     """User class implementation."""
+
     def __init__(self, user_id: str, email: str, display_name: str = None):
         """Initializes a new instance of the class."""
         self.user_id = user_id
@@ -44,4 +47,3 @@ class User:
     def get_refresh_token(self) -> str:
         """Retrieves the refresh token."""
         return self.refresh_token
-

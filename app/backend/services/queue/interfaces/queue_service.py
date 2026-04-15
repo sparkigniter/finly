@@ -1,6 +1,9 @@
 """Module providing queue_service functionality."""
+
+
 class QueueService:
     """QueueService class implementation."""
+
     def push(self, queue: str, data: dict) -> None:
         """Pushes the message data to the queue."""
         pass
@@ -12,4 +15,3 @@ class QueueService:
     def acknowledge(self, message_id: str, queue: str) -> None:
         """Acknowledges the processing of a message."""
         pass
-

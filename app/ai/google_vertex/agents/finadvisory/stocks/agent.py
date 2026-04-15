@@ -62,4 +62,3 @@ class FinAdvisorStocksAgent:
     def update_model(self, model: str):
         """Dynamically updates the agent's model."""
         self._agent.model = model
-

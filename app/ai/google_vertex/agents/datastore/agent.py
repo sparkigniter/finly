@@ -56,4 +56,3 @@ class DataStoreAgent:
     def agent(self) -> Agent:
         """Provides access to the Agent instance."""
         return DataStoreAgent._agent
-

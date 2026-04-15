@@ -1,4 +1,5 @@
 """Module providing provider functionality."""
+
 from app.backend.services.cache.interfaces.cache import Cache
 
 
@@ -28,4 +29,3 @@ class CacheProvider:
     def flushdb(self):
         """Flush the current database in the cache."""
         self.client.flushdb()
-

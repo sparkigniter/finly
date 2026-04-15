@@ -23,4 +23,3 @@ class QueueServiceProvider:
     def acknowledge(self, message_id: str, queue: str):
         """Acknowledges a message to prevent it from being redelivered."""
         self.__client.acknowledge(message_id=message_id, queue=queue)
-

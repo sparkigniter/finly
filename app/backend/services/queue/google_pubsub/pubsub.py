@@ -1,4 +1,5 @@
 """Module providing pubsub functionality."""
+
 from google.cloud import pubsub_v1
 import json
 from typing import Optional, Any
@@ -7,6 +8,7 @@ from google.api_core import exceptions
 
 class PubSub:
     """PubSub class implementation."""
+
     def __init__(
         self,
         project_id: str,
@@ -98,4 +100,3 @@ class PubSub:
                 "ack_ids": [message_id],
             }
         )
-

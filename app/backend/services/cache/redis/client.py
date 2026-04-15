@@ -36,4 +36,3 @@ class RedisClient:
     def flushdb(self) -> bool:
         """Flush the current database in Redis."""
         return self.client.flushdb()
-

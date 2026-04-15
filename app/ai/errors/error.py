@@ -1,4 +1,6 @@
-""" Errors related to AI """
+"""Errors related to AI"""
+
+
 class PortfolioAnalysisError(Exception):
     """Base exception for portfolio analysis failures."""
 
@@ -22,4 +24,3 @@ class DataValidationError(PortfolioAnalysisError):
     def __init__(self, message="Invalid data structure returned by agent"):
         """Initializes a new instance of the class."""
         super().__init__(message)
-

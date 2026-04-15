@@ -1,4 +1,5 @@
 """Module providing service functionality."""
+
 from typing import List, Dict, Any
 from enum import Enum
 import logging
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 class RiskLevel(str, Enum):
     """RiskLevel class implementation."""
+
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
@@ -31,16 +33,19 @@ DEFAULT_TOP_N = 5
 
 class PortfolioError(Exception):
     """PortfolioError class implementation."""
+
     pass
 
 
 class InvalidHoldingError(PortfolioError):
     """InvalidHoldingError class implementation."""
+
     pass
 
 
 class EmptyPortfolioError(PortfolioError):
     """EmptyPortfolioError class implementation."""
+
     pass
 
 
@@ -50,8 +55,8 @@ class EmptyPortfolioError(PortfolioError):
 
 
 class PortfolioService:
-
     """PortfolioService class implementation."""
+
     def __init__(self, holdings: List[Dict[str, Any]], enrich: bool = True):
         """Initializes a new instance of the class."""
         if not holdings:

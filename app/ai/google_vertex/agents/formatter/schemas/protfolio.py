@@ -1,9 +1,11 @@
 """Schema definitions for protfolio."""
+
 from pydantic import BaseModel, Field
 
 
 class PortfolioInsights(BaseModel):
     """PortfolioInsights class implementation."""
+
     portfolio_health_score: float = Field(ge=0, le=100)
     risk_assessment: list[str] = []
     diversification_analysis: list[str] = []
@@ -12,6 +14,7 @@ class PortfolioInsights(BaseModel):
 
 class PersonalizedInsight(BaseModel):
     """PersonalizedInsight class implementation."""
+
     user_profile: str
     portfolio_health_score: float = Field(ge=0, le=100)
 
@@ -26,5 +29,6 @@ class PersonalizedInsight(BaseModel):
 
 class PortfolioAnalysisResponse(BaseModel):
     """PortfolioAnalysisResponse class implementation."""
+
     portfolio_insights: PortfolioInsights
     personalized_insight: PersonalizedInsight

@@ -58,4 +58,3 @@ class StockProcessQueue:
         except exceptions.DeadlineExceeded:
             return None
         return message
-

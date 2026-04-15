@@ -71,4 +71,3 @@ class ProtfolioAnalyseQueue:
         except exceptions.DeadlineExceeded:
             return None
         return message
-

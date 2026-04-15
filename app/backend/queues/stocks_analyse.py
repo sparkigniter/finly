@@ -46,4 +46,3 @@ class StocksAnalyseQueue:
         except exceptions.DeadlineExceeded:
             return None
         return message
-
